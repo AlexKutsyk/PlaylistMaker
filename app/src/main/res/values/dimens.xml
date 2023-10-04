@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="text_size_22">22sp</dimen>
+    <dimen name="text_size_16">16sp</dimen>
+    <dimen name="radius_button">16sp</dimen>
+    <dimen name="side_gap_left">16sp</dimen>
+    <dimen name="side_gap_right">12sp</dimen>
+    <dimen name="title_size">26sp</dimen>
+</resources>
