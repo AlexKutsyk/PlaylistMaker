@@ -3,17 +3,14 @@ package com.practicum.playlistmaker
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import android.widget.Button
-import android.widget.ImageView
-import android.widget.Toast
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val buttonSearch = findViewById<Button>(R.id.search)
+        val buttonSearch = findViewById<Button>(R.id.buttonSearch)
 
         buttonSearch.setOnClickListener{
             val searchIntent = Intent(this, SearchActivity::class.java)
@@ -21,7 +18,7 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-        val buttonLibrary = findViewById<Button>(R.id.library)
+        val buttonLibrary = findViewById<Button>(R.id.buttonLibrary)
 
         buttonLibrary.setOnClickListener{
             val libraryIntent = Intent(this, LibraryActivity::class.java)
@@ -29,7 +26,7 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-        val buttonSetting = findViewById<Button>(R.id.setting)
+        val buttonSetting = findViewById<Button>(R.id.buttonSetting)
 
         buttonSetting.setOnClickListener{
             val settingsActivity = Intent(this, SettingsActivity::class.java)

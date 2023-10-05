@@ -3,4 +3,8 @@
     <string name="main_Menu_Search">Поиск</string>
     <string name="main_Menu_Library">Медиатека</string>
     <string name="main_Menu_Settings">Настройки</string>
+    <string name="dark_theme">Темная тема</string>
+    <string name="share_app">Поделиться приложением</string>
+    <string name="write_to_the_support">Написать в поддержку</string>
+    <string name="user_agreement">Пользовательское соглашение</string>
 </resources>
