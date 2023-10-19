@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="text_size_22">22sp</dimen>
+    <dimen name="text_size_16">16sp</dimen>
+    <dimen name="radius_button">16dp</dimen>
+    <dimen name="gap_16dp">16dp</dimen>
+    <dimen name="side_gap_right">12dp</dimen>
+    <dimen name="title_size">26sp</dimen>
+    <dimen name="icon_gap">8dp</dimen>
+    <dimen name="gap_0dp">0dp</dimen>
+    <dimen name="setting_line_height">61dp</dimen>
+    <dimen name="gap_24dp">24dp</dimen>
+    <dimen name="gap_40dp">40dp</dimen>
+    <dimen name="gap_28dp">28dp</dimen>
+    <dimen name="gap_14dp">14dp</dimen>
+</resources>
