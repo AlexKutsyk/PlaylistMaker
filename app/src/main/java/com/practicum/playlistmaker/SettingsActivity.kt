@@ -18,25 +18,27 @@ class SettingsActivity : AppCompatActivity() {
 
         val buttonShare = findViewById<ImageButton>(R.id.button_share)
         buttonShare.setOnClickListener {
-            val message = getString(R.string.link_share)
-            val shareIntent = Intent(Intent.ACTION_SEND)
-            shareIntent.type = "text/plain"
-            shareIntent.putExtra(Intent.EXTRA_TEXT, message)
-            if (shareIntent.resolveActivity(packageManager) != null) {
-                startActivity(shareIntent)
+            Intent(Intent.ACTION_SEND).apply {
+                val message = getString(R.string.link_share)
+                type = "text/plain"
+                putExtra(Intent.EXTRA_TEXT, message)
+                if (resolveActivity(packageManager) != null) {
+                    startActivity(this)
+                }
             }
         }
 
         val buttonSupport = findViewById<ImageButton>(R.id.button_support)
         buttonSupport.setOnClickListener {
-            val subject = getString(R.string.subject_message)
-            val message = getString(R.string.message)
-            val shareIntent = Intent(Intent.ACTION_SENDTO)
-            shareIntent.data = Uri.parse("mailto:")
-            shareIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.adress)))
-            shareIntent.putExtra(Intent.EXTRA_SUBJECT, subject)
-            shareIntent.putExtra(Intent.EXTRA_TEXT, message)
-            startActivity(shareIntent)
+            Intent(Intent.ACTION_SENDTO).apply {
+                val subject = getString(R.string.subject_message)
+                val message = getString(R.string.message)
+                data = Uri.parse("mailto:")
+                putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.adress)))
+                putExtra(Intent.EXTRA_SUBJECT, subject)
+                putExtra(Intent.EXTRA_TEXT, message)
+                startActivity(this)
+            }
         }
 
         val buttonUserAgreement = findViewById<ImageButton>(R.id.button_user_agreement)

@@ -32,7 +32,7 @@
             android:textColor="?attr/colorOnBackground"
             android:textSize="@dimen/title_size"
             android:fontFamily="@font/ys_display_medium"
-            android:textFontWeight="500"/>
+            android:textFontWeight="500" />
 
     </LinearLayout>
 
@@ -48,45 +48,75 @@
         style="@style/SwitchStyle"
         />
 
-    <LinearLayout style="@style/LinearSettingStyle">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/setting_line_height"
+        android:orientation="horizontal">
 
         <TextView
-            style="@style/TextViewStyle"
-            android:text="@string/share_app" />
+            android:layout_width="@dimen/gap_0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical"
+            android:text="@string/share_app"
+            style="@style/TextViewStyle" />
 
         <ImageButton
             android:id="@+id/button_share"
-            style="@style/ImageButtonStyle"
-            app:srcCompat="@drawable/share" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/icon_gap"
+            app:srcCompat="@drawable/share"
+            style="@style/ImageButtonStyle" />
 
     </LinearLayout>
 
     <LinearLayout
-        style="@style/LinearSettingStyle">
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/setting_line_height"
+        android:orientation="horizontal">
 
         <TextView
             android:text="@string/write_to_the_support"
+            android:layout_width="@dimen/gap_0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical"
             style="@style/TextViewStyle" />
 
         <ImageButton
             android:id="@+id/button_support"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/icon_gap"
             app:srcCompat="@drawable/support"
-            style="@style/ImageButtonStyle"/>
+            style="@style/ImageButtonStyle" />
 
     </LinearLayout>
 
     <LinearLayout
-        style="@style/LinearSettingStyle">
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/setting_line_height"
+        android:orientation="horizontal">
 
         <TextView
             android:text="@string/user_agreement"
+            android:layout_width="@dimen/gap_0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical"
             style="@style/TextViewStyle" />
 
         <ImageButton
             android:id="@+id/button_user_agreement"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/icon_gap"
             app:srcCompat="@drawable/arrow_forward"
-            style="@style/ImageButtonStyle"
-        />
+            style="@style/ImageButtonStyle" />
 
     </LinearLayout>
 

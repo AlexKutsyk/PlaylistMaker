@@ -1,10 +1,8 @@
 package com.practicum.playlistmaker
 
-import android.annotation.SuppressLint
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -14,7 +12,8 @@ import android.widget.ImageView
 
 class SearchActivity : AppCompatActivity() {
 
-    @SuppressLint("MissingInflatedId", "WrongViewCast")
+    private var inputText = TEXT_DEF
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
@@ -30,7 +29,7 @@ class SearchActivity : AppCompatActivity() {
         buttonClear.setOnClickListener{
             inputEditText.setText("")
             val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-            imm?.hideSoftInputFromWindow(buttonClear.getWindowToken(), 0)
+            imm?.hideSoftInputFromWindow(buttonClear.windowToken, 0)
         }
 
         val simpleTextWatcher = object : TextWatcher {
@@ -62,8 +61,6 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    var inputText = TEXT_DEF
-
     override fun onSaveInstanceState (outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(TEMP_TEXT, inputText)
@@ -74,9 +71,9 @@ class SearchActivity : AppCompatActivity() {
         inputText = savedInstanceState.getString(TEMP_TEXT, TEXT_DEF)
     }
 
-    companion object {
-        val TEMP_TEXT = "TEMP_TEXT"
-        val TEXT_DEF = ""
+    private companion object {
+        const val TEMP_TEXT = "TEMP_TEXT"
+        const val TEXT_DEF = ""
     }
 
 }

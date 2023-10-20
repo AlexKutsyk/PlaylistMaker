@@ -61,7 +61,7 @@
             android:textSize="@dimen/text_size_16"
             android:textFontWeight="400"
             android:textColorHint="?attr/colorOnContainer"
-            android:textColor="?attr/colorOnContainer"
+            android:textColor="@color/black"
             android:textCursorDrawable="@drawable/cursor"
             android:maxLines="1"
             android:inputType="text"
@@ -72,8 +72,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:srcCompat="@drawable/baseline_clear_24"
-            app:tint="?attr/colorOnContainer"
-            android:visibility="gone"
+            app:tint="@color/black"
+            android:visibility="visible"
             />
 
 

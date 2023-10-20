@@ -20,6 +20,14 @@
 
     <Button
         android:id="@+id/buttonSearch"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/gap_0dp"
+        android:layout_weight="1"
+        android:insetTop="@dimen/gap_0dp"
+        android:insetBottom="@dimen/gap_0dp"
+        app:iconGravity="textStart"
+        app:iconPadding="@dimen/icon_gap"
+        app:cornerRadius="@dimen/radius_button"
         android:layout_marginTop="@dimen/gap_40dp"
         android:text="@string/main_Menu_Search"
         app:icon="@drawable/search"
@@ -27,13 +35,30 @@
 
     <Button
         android:id="@+id/buttonLibrary"
-        style="@style/ButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/gap_0dp"
+        android:layout_weight="1"
+        android:insetTop="@dimen/gap_0dp"
+        android:insetBottom="@dimen/gap_0dp"
+        app:iconGravity="textStart"
+        app:iconPadding="@dimen/icon_gap"
+        app:cornerRadius="@dimen/radius_button"
         android:layout_marginVertical="@dimen/gap_16dp"
         android:text="@string/main_Menu_Library"
-        app:icon="@drawable/library" />
+        app:icon="@drawable/library"
+        style="@style/ButtonStyle"
+        />
 
     <Button
         android:id="@+id/buttonSetting"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/gap_0dp"
+        android:layout_weight="1"
+        android:insetTop="@dimen/gap_0dp"
+        android:insetBottom="@dimen/gap_0dp"
+        app:iconGravity="textStart"
+        app:iconPadding="@dimen/icon_gap"
+        app:cornerRadius="@dimen/radius_button"
         android:layout_marginBottom="@dimen/gap_28dp"
         android:text="@string/main_Menu_Settings"
         app:icon="@drawable/settings"
