@@ -5,12 +5,13 @@
     android:layout_height="match_parent"
     android:background="?attr/colorSecondary"
     android:orientation="vertical"
-    android:paddingHorizontal="@dimen/gap_16dp">
+    >
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="@dimen/gap_52dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginHorizontal="@dimen/gap_16dp">
 
         <ImageButton
             android:id="@+id/buttonBack"
@@ -35,10 +36,11 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="36dp"
+        android:layout_height="@dimen/_36dp"
         android:gravity="center_vertical"
         android:background="@drawable/edit_text"
         android:layout_marginVertical="@dimen/gap_8dp"
+        android:layout_marginHorizontal="@dimen/gap_16dp"
         >
 
         <ImageView
@@ -46,14 +48,14 @@
             android:layout_height="wrap_content"
             app:srcCompat="@drawable/search"
             app:tint="?attr/colorOnContainer"
-            android:paddingStart="12dp"
+            android:paddingStart="@dimen/_12dp"
             />
 
         <EditText
             android:id="@+id/edit_text_search"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_height="36dp"
+            android:layout_height="@dimen/_36dp"
             android:background="@drawable/edit_text"
             android:paddingStart="@dimen/gap_8dp"
             android:hint="@string/main_Menu_Search"
@@ -71,12 +73,20 @@
             android:id="@+id/clear_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/icon_gap"
             app:srcCompat="@drawable/baseline_clear_24"
             app:tint="@color/black"
             android:visibility="visible"
             />
 
-
     </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/track_recycleView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="@dimen/_13dp"
+        android:layout_marginEnd="@dimen/_12dp"
+        android:layout_marginVertical="@dimen/gap_16dp"/>
 
 </LinearLayout>
