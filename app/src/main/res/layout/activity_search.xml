@@ -187,7 +187,7 @@
 
             <TextView
                 android:layout_width="312dp"
-                android:layout_height="88dp"
+                android:layout_height="wrap_content"
                 android:text="@string/error_no_signal"
                 android:layout_marginTop="@dimen/_20dp"
                 android:textSize="19sp"
@@ -200,7 +200,7 @@
             <Button
                 android:id="@+id/button_refresh"
                 android:layout_width="wrap_content"
-                android:layout_height="36dp"
+                android:layout_height="wrap_content"
                 android:backgroundTint="?attr/colorOnBackground"
                 android:text="@string/refresh"
                 android:fontFamily="@font/ys_display_medium"
@@ -211,9 +211,6 @@
                 android:layout_marginTop="34dp"
                 android:insetTop="@dimen/gap_0dp"
                 android:insetBottom="@dimen/gap_0dp"
-                android:insetLeft="@dimen/gap_0dp"
-                android:insetRight="@dimen/gap_0dp"
-                android:paddingVertical="@dimen/gap_4dp"
                 />
 
         </LinearLayout>

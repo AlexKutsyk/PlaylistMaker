@@ -22,11 +22,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class SearchActivity : AppCompatActivity() {
 
-    private companion object {
-        const val TEMP_TEXT = "TEMP_TEXT"
-        const val TEXT_DEF = ""
-    }
-
     private var inputText = TEXT_DEF
 
     private val iTunesBaseURL = "https://itunes.apple.com"
@@ -134,6 +129,7 @@ class SearchActivity : AppCompatActivity() {
                         200 -> {
                             if (response.body()?.results?.isNotEmpty() == true) {
                                 tracks.clear()
+                                placeholderErrorSearch.visibility = View.GONE
                                 tracks.addAll(response.body()?.results!!)
                                 adapter.notifyDataSetChanged()
                             } else {
@@ -164,4 +160,9 @@ class SearchActivity : AppCompatActivity() {
             })
     }
 
+
+    private companion object {
+        const val TEMP_TEXT = "TEMP_TEXT"
+        const val TEXT_DEF = ""
+    }
 }
