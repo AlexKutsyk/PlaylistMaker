@@ -24,10 +24,4 @@
         <item name="tint">?attr/colorPrimaryVariant</item>
     </style>
 
-    <style name="SwitchStyle">
-        <item name="android:thumbTint">@color/grey</item>
-        <item name="android:trackTint">@color/grey</item>
-        <item name="android:checked">false</item>
-
-    </style>
 </resources>
