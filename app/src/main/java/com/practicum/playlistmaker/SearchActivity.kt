@@ -106,11 +106,15 @@ class SearchActivity : AppCompatActivity() {
 
         inputEditText.setOnFocusChangeListener { view, hasFocus ->
             if (hasFocus && inputEditText.text.isEmpty()) {
-                historySearch.visibility = View.VISIBLE
                 trackListHistory = searchHistory.readSearchHistory()!!.toMutableList()
                 makeRecycleViewHistory()
-
+                if (trackListHistory.isNotEmpty()) {
+                    historySearch.visibility = View.VISIBLE
+                } else {
+                    historySearch.visibility = View.GONE
+                }
                 cleanHistory.setOnClickListener {
+                    historySearch.visibility = View.GONE
                     searchHistory.cleanSearchHistory()
                     trackListHistory = searchHistory.readSearchHistory()!!.toMutableList()
                     makeRecycleViewHistory()
@@ -128,18 +132,22 @@ class SearchActivity : AppCompatActivity() {
                 if (inputEditText.hasFocus() && p0?.isEmpty() == true) {
                     trackList.visibility = View.GONE
                     tracks.clear()
-                    historySearch.visibility = View.VISIBLE
-
+                    adapter.notifyDataSetChanged()
                     trackListHistory = searchHistory.readSearchHistory()!!.toMutableList()
                     makeRecycleViewHistory()
+                    if (trackListHistory.isNotEmpty()) {
+                        historySearch.visibility = View.VISIBLE
+                    } else {
+                        historySearch.visibility = View.GONE
+                    }
 
                     cleanHistory.setOnClickListener {
+                        historySearch.visibility = View.GONE
                         searchHistory.cleanSearchHistory()
                         trackListHistory = searchHistory.readSearchHistory()!!.toMutableList()
                         makeRecycleViewHistory()
                     }
                 } else {
-                    historySearch.visibility = View.GONE
                     trackList.visibility = View.VISIBLE
                 }
             }
