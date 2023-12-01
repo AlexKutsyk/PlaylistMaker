@@ -36,16 +36,18 @@
 
     </LinearLayout>
 
-    <Switch
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/themeSwitcher"
         android:layout_width="match_parent"
         android:layout_height="@dimen/setting_line_height"
         android:layout_marginTop="@dimen/gap_24dp"
+        android:fontFamily="@font/ys_display_regular"
         android:text="@string/dark_theme"
         android:textColor="?attr/colorOnSecondary"
-        android:textSize="@dimen/text_size_16"
-        android:fontFamily="@font/ys_display_regular"
         android:textFontWeight="400"
-        style="@style/SwitchStyle"
+        android:textSize="@dimen/text_size_16"
+        app:trackTint="?attr/colorSurface"
+        app:thumbTint="?attr/colorOnSurface"
         />
 
     <LinearLayout
