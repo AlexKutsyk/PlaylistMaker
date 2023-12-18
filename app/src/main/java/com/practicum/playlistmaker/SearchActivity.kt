@@ -1,6 +1,7 @@
 package com.practicum.playlistmaker
 
 import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
@@ -14,6 +15,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -36,6 +38,8 @@ class SearchActivity : AppCompatActivity() {
     private var trackListHistory: MutableList<Track> = mutableListOf()
 
     private lateinit var adapter: TrackAdapter
+    private lateinit var adapterHistory: TrackAdapter
+
 
     private lateinit var backButton: ImageView
     private lateinit var clearButton: ImageView
@@ -95,19 +99,21 @@ class SearchActivity : AppCompatActivity() {
         val sharedPrefs = getSharedPreferences(STORAGE, MODE_PRIVATE)
         val searchHistory = SearchHistory(sharedPrefs)
 
+
         val onTrackClickListener = object : OnItemClickListener {
             override fun onItemClick(track: Track) {
                 trackListHistory.removeAll { it.trackId == track.trackId }
                 trackListHistory.add(0, track)
                 trackListHistory = trackListHistory.take(10).toMutableList()
                 searchHistory.saveSearchHistory(trackListHistory)
+                startPlayer(track)
             }
         }
 
         inputEditText.setOnFocusChangeListener { view, hasFocus ->
             if (hasFocus && inputEditText.text.isEmpty()) {
                 trackListHistory = searchHistory.readSearchHistory()!!.toMutableList()
-                makeRecycleViewHistory()
+                makeRecycleViewHistory(onTrackClickListener)
                 if (trackListHistory.isNotEmpty()) {
                     historySearch.visibility = View.VISIBLE
                 } else {
@@ -117,7 +123,7 @@ class SearchActivity : AppCompatActivity() {
                     historySearch.visibility = View.GONE
                     searchHistory.cleanSearchHistory()
                     trackListHistory = searchHistory.readSearchHistory()!!.toMutableList()
-                    makeRecycleViewHistory()
+                    makeRecycleViewHistory(onTrackClickListener)
                 }
             } else {
                 historySearch.visibility = View.GONE
@@ -132,9 +138,8 @@ class SearchActivity : AppCompatActivity() {
                 if (inputEditText.hasFocus() && p0?.isEmpty() == true) {
                     trackList.visibility = View.GONE
                     tracks.clear()
-                    adapter.notifyDataSetChanged()
                     trackListHistory = searchHistory.readSearchHistory()!!.toMutableList()
-                    makeRecycleViewHistory()
+                    makeRecycleViewHistory(onTrackClickListener)
                     if (trackListHistory.isNotEmpty()) {
                         historySearch.visibility = View.VISIBLE
                     } else {
@@ -145,10 +150,11 @@ class SearchActivity : AppCompatActivity() {
                         historySearch.visibility = View.GONE
                         searchHistory.cleanSearchHistory()
                         trackListHistory = searchHistory.readSearchHistory()!!.toMutableList()
-                        makeRecycleViewHistory()
+                        makeRecycleViewHistory(onTrackClickListener)
                     }
                 } else {
                     trackList.visibility = View.VISIBLE
+                    historySearch.visibility = View.GONE
                 }
             }
 
@@ -156,14 +162,12 @@ class SearchActivity : AppCompatActivity() {
             }
         })
 
-        recyclerViewHistory.layoutManager =
-            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-
         adapter = TrackAdapter(tracks, onTrackClickListener)
-
         adapter.trackList = tracks
+
         trackList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         trackList.adapter = adapter
+
 
         inputEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -171,6 +175,7 @@ class SearchActivity : AppCompatActivity() {
             }
             false
         }
+
     }
 
     private fun clearButtonVisibility(s: CharSequence?): Int {
@@ -232,9 +237,27 @@ class SearchActivity : AppCompatActivity() {
             })
     }
 
-    fun makeRecycleViewHistory() {
-        val adapterHistory = TrackHistoryAdapter(trackListHistory as ArrayList<Track>)
+    fun makeRecycleViewHistory(onTrackClickListener: OnItemClickListener) {
+        adapterHistory =
+            TrackAdapter(trackListHistory as ArrayList<Track>, onTrackClickListener)
+        adapterHistory.trackList = trackListHistory as ArrayList<Track>
+
+        recyclerViewHistory.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         recyclerViewHistory.adapter = adapterHistory
+    }
+
+    fun startPlayer(track: Track) {
+        val playerIntent = Intent(this@SearchActivity, PlayerActivity::class.java)
+        playerIntent.putExtra("trackName", track.trackName)
+        playerIntent.putExtra("artistName", track.artistName)
+        playerIntent.putExtra("trackTimeMillis", track.trackTimeMillis)
+        playerIntent.putExtra("artworkUrl100", track.artworkUrl100)
+        playerIntent.putExtra("collectionName", track.collectionName)
+        playerIntent.putExtra("releaseDate", track.releaseDate)
+        playerIntent.putExtra("genreName", track.primaryGenreName)
+        playerIntent.putExtra("country", track.country)
+        startActivity(playerIntent)
     }
 
     private companion object {
