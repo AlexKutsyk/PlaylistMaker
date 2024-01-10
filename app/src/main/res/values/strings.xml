@@ -22,4 +22,7 @@
     <string name="Year">Год</string>
     <string name="Genre">Жанр</string>
     <string name="Country">Страна</string>
+    <string name="time_track_mm_ss">mm:ss</string>
+    <string name="year_track_yyyy">yyyy</string>
+    <string name="no_demo">No Demo</string>
 </resources>

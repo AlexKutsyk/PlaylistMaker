@@ -223,6 +223,7 @@ class SearchActivity : AppCompatActivity() {
                         t.printStackTrace()
                         tracks.clear()
                         adapter.notifyDataSetChanged()
+                        progressBar.visibility = View.GONE
                         placeholderErrorConnect.visibility = View.VISIBLE
                         refreshButton.setOnClickListener {
                             placeholderErrorConnect.visibility = View.GONE
@@ -243,15 +244,7 @@ class SearchActivity : AppCompatActivity() {
 
     private fun startPlayer(track: Track) {
         val playerIntent = Intent(this@SearchActivity, PlayerActivity::class.java)
-        playerIntent.putExtra(KEY_TRACKNAME, track.trackName)
-        playerIntent.putExtra(KEY_ARTISTNAME, track.artistName)
-        playerIntent.putExtra(KEY_TRACKTIMEMILLIS, track.trackTimeMillis)
-        playerIntent.putExtra(KEY_ARTWORKURL100, track.artworkUrl100)
-        playerIntent.putExtra(KEY_COLLECTIONNAME, track.collectionName)
-        playerIntent.putExtra(KEY_RELEASEDATE, track.releaseDate)
-        playerIntent.putExtra(KEY_GENRENAME, track.primaryGenreName)
-        playerIntent.putExtra(KEY_COUNTRY, track.country)
-        playerIntent.putExtra(KEY_PREVIEWURL, track.previewUrl)
+        playerIntent.putExtra(KEY_TRACK, track)
         startActivity(playerIntent)
     }
 
@@ -259,7 +252,7 @@ class SearchActivity : AppCompatActivity() {
         if (clickDebounce()) {
             trackListHistory.removeAll { it.trackId == track.trackId }
             trackListHistory.add(0, track)
-            trackListHistory = trackListHistory.take(10).toMutableList()
+            trackListHistory = trackListHistory.take(MAX_AMOUNT_HISTORY_ITEMS).toMutableList()
             searchHistory.saveSearchHistory(trackListHistory)
             startPlayer(track)
         }
@@ -282,7 +275,7 @@ class SearchActivity : AppCompatActivity() {
 
     private val searchRunnable = Runnable { search() }
 
-    fun searchDebounce() {
+    private fun searchDebounce() {
         handler.removeCallbacks(searchRunnable)
         handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
     }
@@ -292,6 +285,7 @@ class SearchActivity : AppCompatActivity() {
         const val TEXT_DEF = ""
         const val CLICK_DEBOUNCE_DELAY = 1000L
         const val SEARCH_DEBOUNCE_DELAY = 2000L
+        const val MAX_AMOUNT_HISTORY_ITEMS = 10
     }
 }
 

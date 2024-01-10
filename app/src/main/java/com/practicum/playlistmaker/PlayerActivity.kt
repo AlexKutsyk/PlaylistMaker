@@ -1,13 +1,16 @@
 package com.practicum.playlistmaker
 
 import android.media.MediaPlayer
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
+import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.Group
 import com.bumptech.glide.Glide
@@ -17,70 +20,76 @@ import java.util.Locale
 
 class PlayerActivity : AppCompatActivity() {
 
-    private var mediaPlayer = MediaPlayer()
+    val mediaPlayer = MediaPlayer()
+    val handler = Handler(Looper.getMainLooper())
     private var urlTrack: String? = null
-    var durationTimeTrack: Long = 0
     private lateinit var playButton: ImageButton
     private lateinit var pauseButton: ImageButton
-    val handler = Handler(Looper.getMainLooper())
-    lateinit var timePlaying: TextView
+    private lateinit var timePlaying: TextView
+    private val timeTrack: SimpleDateFormat by lazy {
+        SimpleDateFormat(
+            getString(R.string.time_track_mm_ss),
+            Locale.getDefault()
+        )
+    }
+    private val yearTrack: SimpleDateFormat by lazy {
+        SimpleDateFormat(
+            getString(R.string.year_track_yyyy),
+            Locale.getDefault()
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_player)
 
-        playButton = findViewById(R.id.playButton)
-        playButton.isEnabled = false
-        pauseButton = findViewById(R.id.pauseButton)
-        urlTrack = intent.getStringExtra(KEY_PREVIEWURL)
-
         val backButton: ImageButton = findViewById(R.id.backButton)
-        backButton.setOnClickListener {
-            finish()
+        val trackName: TextView = findViewById(R.id.nameTrack)
+        val artistName: TextView = findViewById(R.id.nameArtist)
+        val duration: TextView = findViewById(R.id.durationValue)
+        val coverAlbum: ImageView = findViewById(R.id.coverAlbum)
+        val collectionName: TextView = findViewById(R.id.albumValue)
+        val collectionGroup: Group = findViewById(R.id.albumGroup)
+        val releaseDate: TextView = findViewById(R.id.yearValue)
+        val genreName: TextView = findViewById(R.id.genreValue)
+        val country: TextView = findViewById(R.id.countryValue)
+        playButton = findViewById(R.id.playButton)
+        pauseButton = findViewById(R.id.pauseButton)
+        timePlaying = findViewById(R.id.timePlaying)
+
+        playButton.isEnabled = false
+        backButton.setOnClickListener { finish() }
+
+        val track: Track? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            intent.getParcelableExtra(KEY_TRACK, Track::class.java)
+        } else {
+            intent.getParcelableExtra(KEY_TRACK)
         }
 
-        val trackName: TextView = findViewById(R.id.nameTrack)
-        trackName.text = intent.getStringExtra(KEY_TRACKNAME)
+        urlTrack = track?.previewUrl
+        trackName.text = track?.trackName
+        artistName.text = track?.artistName
+        duration.text = timeTrack.format(track?.trackTimeMillis)
 
-        val artistName: TextView = findViewById(R.id.nameArtist)
-        artistName.text = intent.getStringExtra(KEY_ARTISTNAME)
-
-        val duration: TextView = findViewById(R.id.durationValue)
-        duration.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(
-            intent.getIntExtra(KEY_TRACKTIMEMILLIS, 0)
-        )
-
-        val coverAlbum: ImageView = findViewById(R.id.coverAlbum)
         Glide.with(coverAlbum)
-            .load(
-                intent.getStringExtra(KEY_ARTWORKURL100)
-                    ?.replaceAfterLast('/', "512x512bb.jpg")
-            )
+            .load(track?.getCoverArtworkUrl())
             .placeholder(R.drawable.placeholder)
             .transform(RoundedCorners(dpToPx(8f, coverAlbum.context)))
             .into(coverAlbum)
 
-        val collectionName: TextView = findViewById(R.id.albumValue)
-        val collectionGroup: Group = findViewById(R.id.albumGroup)
-        if (intent.getStringExtra(KEY_COLLECTIONNAME).isNullOrEmpty()) {
+        if (track?.collectionName.isNullOrEmpty()) {
             collectionGroup.visibility = View.GONE
         } else {
-            collectionName.text = intent.getStringExtra(KEY_COLLECTIONNAME)
+            collectionName.text = track?.collectionName
         }
 
-        val releaseDate: TextView = findViewById(R.id.yearValue)
-        releaseDate.text = SimpleDateFormat("yyyy", Locale.getDefault()).format(
-            SimpleDateFormat("yyyy").parse(intent.getStringExtra(KEY_RELEASEDATE))
+        releaseDate.text = yearTrack.format(
+            SimpleDateFormat(getString(R.string.year_track_yyyy)).parse(track?.releaseDate)
         )
 
-        val genreName: TextView = findViewById(R.id.genreValue)
-        genreName.text = intent.getStringExtra(KEY_GENRENAME)
-
-        val country: TextView = findViewById(R.id.countryValue)
-        country.text = intent.getStringExtra(KEY_COUNTRY)
-
-        timePlaying = findViewById(R.id.timePlaying)
-        timePlaying.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(durationTimeTrack)
+        genreName.text = track?.primaryGenreName
+        country.text = track?.country
+        timePlaying.text = timeTrack.format(START_TIME)
 
         preparePlayer()
 
@@ -95,7 +104,7 @@ class PlayerActivity : AppCompatActivity() {
 
     private fun preparePlayer() {
         if (urlTrack.isNullOrEmpty()) {
-            timePlaying.text = "No Demo"
+            timePlaying.text = getString(R.string.no_demo)
         } else {
             mediaPlayer.setDataSource(urlTrack)
             mediaPlayer.prepareAsync()
@@ -107,9 +116,7 @@ class PlayerActivity : AppCompatActivity() {
             mediaPlayer.setOnCompletionListener {
                 playButton.visibility = View.VISIBLE
                 pauseButton.visibility = View.GONE
-                durationTimeTrack = 0
-                timePlaying.text =
-                    SimpleDateFormat("mm:ss", Locale.getDefault()).format(durationTimeTrack)
+                timePlaying.text = timeTrack.format(START_TIME)
                 handler.removeCallbacks(currentTimeTrack)
             }
         }
@@ -130,17 +137,12 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun timer() {
-        val thread = Thread {
-            handler.post(currentTimeTrack)
-        }
-        thread.start()
+        handler.post(currentTimeTrack)
     }
 
     private var currentTimeTrack = object : Runnable {
         override fun run() {
-            durationTimeTrack = mediaPlayer.currentPosition.toLong()
-            timePlaying.text =
-                SimpleDateFormat("mm:ss", Locale.getDefault()).format(durationTimeTrack)
+            timePlaying.text = timeTrack.format(mediaPlayer.currentPosition.toLong())
             handler.postDelayed(this, 500)
         }
     }
@@ -159,12 +161,5 @@ class PlayerActivity : AppCompatActivity() {
 
 }
 
-const val KEY_TRACKNAME = "trackName"
-const val KEY_ARTISTNAME = "artistName"
-const val KEY_TRACKTIMEMILLIS = "trackTimeMillis"
-const val KEY_ARTWORKURL100 = "artworkUrl100"
-const val KEY_COLLECTIONNAME = "collectionName"
-const val KEY_RELEASEDATE = "releaseDate"
-const val KEY_GENRENAME = "genreName"
-const val KEY_COUNTRY = "country"
-const val KEY_PREVIEWURL = "previewUrl"
+const val KEY_TRACK = "track"
+const val START_TIME = 0
