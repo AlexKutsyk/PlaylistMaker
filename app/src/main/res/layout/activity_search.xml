@@ -81,14 +81,46 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center">
+
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    android:layout_width="@dimen/_44dp"
+                    android:layout_height="@dimen/_44dp"
+                    android:indeterminate="true"
+                    android:indeterminateTint="@color/azure"
+                    android:visibility="gone"
+                     />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+        </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/track_recyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginHorizontal="@dimen/_12dp"
-            android:layout_marginVertical="@dimen/gap_16dp" />
+            android:layout_marginVertical="@dimen/gap_16dp"
+            />
 
         <LinearLayout
             android:id="@+id/placeholder_error_search"
