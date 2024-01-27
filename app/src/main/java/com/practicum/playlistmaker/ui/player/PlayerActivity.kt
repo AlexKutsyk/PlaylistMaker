@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker
+package com.practicum.playlistmaker.ui.player
 
 import android.media.MediaPlayer
 import android.os.Build
@@ -6,15 +6,16 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
-import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.Group
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.practicum.playlistmaker.R
+import com.practicum.playlistmaker.domain.models.Track
+import com.practicum.playlistmaker.ui.search.dpToPx
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -60,35 +61,35 @@ class PlayerActivity : AppCompatActivity() {
         playButton.isEnabled = false
         backButton.setOnClickListener { finish() }
 
-        val track: Track? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            intent.getParcelableExtra(KEY_TRACK, Track::class.java)
+        val track: Track = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            intent.getParcelableExtra(KEY_TRACK, Track::class.java)!!
         } else {
-            intent.getParcelableExtra(KEY_TRACK)
+            intent.getParcelableExtra(KEY_TRACK)!!
         }
 
-        urlTrack = track?.previewUrl
-        trackName.text = track?.trackName
-        artistName.text = track?.artistName
-        duration.text = timeTrack.format(track?.trackTimeMillis)
+        urlTrack = track.previewUrl
+        trackName.text = track.trackName
+        artistName.text = track.artistName
+        duration.text = timeTrack.format(track.trackTimeMillis)
 
         Glide.with(coverAlbum)
-            .load(track?.getCoverArtworkUrl())
+            .load(track.getCoverArtworkUrl())
             .placeholder(R.drawable.placeholder)
             .transform(RoundedCorners(dpToPx(8f, coverAlbum.context)))
             .into(coverAlbum)
 
-        if (track?.collectionName.isNullOrEmpty()) {
+        if (track.collectionName.isNullOrEmpty()) {
             collectionGroup.visibility = View.GONE
         } else {
-            collectionName.text = track?.collectionName
+            collectionName.text = track.collectionName
         }
 
         releaseDate.text = yearTrack.format(
-            SimpleDateFormat(getString(R.string.year_track_yyyy)).parse(track?.releaseDate)
+            SimpleDateFormat(getString(R.string.year_track_yyyy)).parse(track.releaseDate)
         )
 
-        genreName.text = track?.primaryGenreName
-        country.text = track?.country
+        genreName.text = track.primaryGenreName
+        country.text = track.country
         timePlaying.text = timeTrack.format(START_TIME)
 
         preparePlayer()

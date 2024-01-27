@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker
+package com.practicum.playlistmaker.ui.search
 
 import android.content.Context
 import android.content.Intent
@@ -18,6 +18,14 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.practicum.playlistmaker.R
+import com.practicum.playlistmaker.STORAGE
+import com.practicum.playlistmaker.SearchHistory
+import com.practicum.playlistmaker.data.dto.TracksSearchResponse
+import com.practicum.playlistmaker.data.network.ITunesAPI
+import com.practicum.playlistmaker.domain.models.Track
+import com.practicum.playlistmaker.ui.player.KEY_TRACK
+import com.practicum.playlistmaker.ui.player.PlayerActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -27,6 +35,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 class SearchActivity : AppCompatActivity() {
 
     private var inputText = TEXT_DEF
+
 
     private val iTunesBaseURL = "https://itunes.apple.com"
 
@@ -192,9 +201,9 @@ class SearchActivity : AppCompatActivity() {
             trackList.visibility = View.GONE
             progressBar.visibility = View.VISIBLE
             iTunesService.findTrack(inputText)
-                .enqueue(object : Callback<TracksResponse> {
+                .enqueue(object : Callback<TracksSearchResponse> {
                     override fun onResponse(
-                        call: Call<TracksResponse>, response: Response<TracksResponse>
+                        call: Call<TracksSearchResponse>, response: Response<TracksSearchResponse>
                     ) {
                         progressBar.visibility = View.GONE
                         when (response.code()) {
@@ -219,7 +228,7 @@ class SearchActivity : AppCompatActivity() {
                         }
                     }
 
-                    override fun onFailure(call: Call<TracksResponse>, t: Throwable) {
+                    override fun onFailure(call: Call<TracksSearchResponse>, t: Throwable) {
                         t.printStackTrace()
                         tracks.clear()
                         adapter.notifyDataSetChanged()
