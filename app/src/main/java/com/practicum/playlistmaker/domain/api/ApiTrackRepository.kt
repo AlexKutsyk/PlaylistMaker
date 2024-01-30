@@ -2,6 +2,6 @@ package com.practicum.playlistmaker.domain.api
 
 import com.practicum.playlistmaker.domain.models.Track
 
-interface TrackIntentRepository {
-    fun getTrack() : Track
+interface ApiTrackRepository {
+    fun getTrack(expression: String): List<Track>
 }

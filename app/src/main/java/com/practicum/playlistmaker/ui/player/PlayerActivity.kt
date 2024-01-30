@@ -1,6 +1,5 @@
 package com.practicum.playlistmaker.ui.player
 
-import android.media.MediaPlayer
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -13,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.Group
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.practicum.playlistmaker.Creator
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.domain.models.Track
 import com.practicum.playlistmaker.ui.search.dpToPx
@@ -21,7 +21,8 @@ import java.util.Locale
 
 class PlayerActivity : AppCompatActivity() {
 
-    val mediaPlayer = MediaPlayer()
+    //    val mediaPlayer = MediaPlayer()
+    val mediaPlayer = Creator.provideMediaPlayerInteractor()
     val handler = Handler(Looper.getMainLooper())
     private var urlTrack: String? = null
     private lateinit var playButton: ImageButton
@@ -109,17 +110,18 @@ class PlayerActivity : AppCompatActivity() {
         } else {
             mediaPlayer.setDataSource(urlTrack)
             mediaPlayer.prepareAsync()
-            mediaPlayer.setOnPreparedListener {
+            mediaPlayer.setOnPreparedListener(param = {
                 playButton.visibility = View.VISIBLE
                 pauseButton.visibility = View.GONE
                 playButton.isEnabled = true
             }
-            mediaPlayer.setOnCompletionListener {
+            )
+            mediaPlayer.setOnCompletionListener(param = {
                 playButton.visibility = View.VISIBLE
                 pauseButton.visibility = View.GONE
                 timePlaying.text = timeTrack.format(START_TIME)
                 handler.removeCallbacks(currentTimeTrack)
-            }
+            })
         }
     }
 
@@ -143,7 +145,7 @@ class PlayerActivity : AppCompatActivity() {
 
     private var currentTimeTrack = object : Runnable {
         override fun run() {
-            timePlaying.text = timeTrack.format(mediaPlayer.currentPosition.toLong())
+            timePlaying.text = timeTrack.format(mediaPlayer.currentPosition().toLong())
             handler.postDelayed(this, 500)
         }
     }

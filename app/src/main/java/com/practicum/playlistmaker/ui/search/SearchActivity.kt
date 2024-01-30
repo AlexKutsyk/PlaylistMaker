@@ -2,7 +2,6 @@ package com.practicum.playlistmaker.ui.search
 
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -18,9 +17,8 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.practicum.playlistmaker.Creator
 import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.STORAGE
-import com.practicum.playlistmaker.SearchHistory
 import com.practicum.playlistmaker.data.dto.TracksSearchResponse
 import com.practicum.playlistmaker.data.network.ITunesAPI
 import com.practicum.playlistmaker.domain.models.Track
@@ -34,8 +32,9 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class SearchActivity : AppCompatActivity() {
 
+    val getTrackHistorySharedPreferences by lazy { Creator.provideSharedPreferencesInteractor(applicationContext) }
+//    private val getTrackInteractor = Creator.provideTrackInteractor()
     private var inputText = TEXT_DEF
-
 
     private val iTunesBaseURL = "https://itunes.apple.com"
 
@@ -48,8 +47,6 @@ class SearchActivity : AppCompatActivity() {
     private var tracks = ArrayList<Track>()
     private var trackListHistory: MutableList<Track> = mutableListOf()
 
-    private lateinit var sharedPrefs: SharedPreferences
-    lateinit var searchHistory: SearchHistory
 
     private var isClickAllow = true
     private val handler = Handler(Looper.getMainLooper())
@@ -113,13 +110,10 @@ class SearchActivity : AppCompatActivity() {
         inputEditText.addTextChangedListener(simpleTextWatcher)
         inputEditText.setText(inputText)
 
-        sharedPrefs = getSharedPreferences(STORAGE, MODE_PRIVATE)
-        searchHistory = SearchHistory(sharedPrefs)
-
-
         inputEditText.setOnFocusChangeListener { view, hasFocus ->
             if (hasFocus && inputEditText.text.isEmpty()) {
-                trackListHistory = searchHistory.readSearchHistory()!!.toMutableList()
+                trackListHistory =
+                    getTrackHistorySharedPreferences.readSearchHistory()!!.toMutableList()
                 makeRecycleViewHistory()
                 if (trackListHistory.isNotEmpty()) {
                     historySearch.visibility = View.VISIBLE
@@ -128,8 +122,9 @@ class SearchActivity : AppCompatActivity() {
                 }
                 cleanHistory.setOnClickListener {
                     historySearch.visibility = View.GONE
-                    searchHistory.cleanSearchHistory()
-                    trackListHistory = searchHistory.readSearchHistory()!!.toMutableList()
+                    getTrackHistorySharedPreferences.cleanSearchHistory()
+                    trackListHistory =
+                        getTrackHistorySharedPreferences.readSearchHistory()!!.toMutableList()
                     makeRecycleViewHistory()
                 }
             } else {
@@ -145,7 +140,8 @@ class SearchActivity : AppCompatActivity() {
                 if (inputEditText.hasFocus() && p0?.isEmpty() == true) {
                     trackList.visibility = View.GONE
                     tracks.clear()
-                    trackListHistory = searchHistory.readSearchHistory()!!.toMutableList()
+                    trackListHistory =
+                        getTrackHistorySharedPreferences.readSearchHistory()!!.toMutableList()
                     makeRecycleViewHistory()
                     if (trackListHistory.isNotEmpty()) {
                         historySearch.visibility = View.VISIBLE
@@ -155,8 +151,9 @@ class SearchActivity : AppCompatActivity() {
 
                     cleanHistory.setOnClickListener {
                         historySearch.visibility = View.GONE
-                        searchHistory.cleanSearchHistory()
-                        trackListHistory = searchHistory.readSearchHistory()!!.toMutableList()
+                        getTrackHistorySharedPreferences.cleanSearchHistory()
+                        trackListHistory =
+                            getTrackHistorySharedPreferences.readSearchHistory()!!.toMutableList()
                         makeRecycleViewHistory()
                     }
                 } else {
@@ -200,6 +197,23 @@ class SearchActivity : AppCompatActivity() {
             placeholderErrorSearch.visibility = View.GONE
             trackList.visibility = View.GONE
             progressBar.visibility = View.VISIBLE
+//            getTrackInteractor.getTrack(inputText, object : ApiTrackInteractor.TrackConsumer {
+//                override fun consume(tracks: List<Track>) {
+//                    handler.post {
+//                        progressBar.visibility = View.GONE
+//                        if (tracks.isNotEmpty()) {
+//                            tracks.toMutableList().clear()
+//                            trackList.visibility = View.VISIBLE
+//                            tracks.toMutableList().addAll(tracks)
+//                            adapter.notifyDataSetChanged()
+//                        } else {
+//                        tracks.toMutableList().clear()
+//                            adapter.notifyDataSetChanged()
+//                            placeholderErrorSearch.visibility = View.VISIBLE
+//                        }
+//                    }
+//                }
+//            })
             iTunesService.findTrack(inputText)
                 .enqueue(object : Callback<TracksSearchResponse> {
                     override fun onResponse(
@@ -262,7 +276,7 @@ class SearchActivity : AppCompatActivity() {
             trackListHistory.removeAll { it.trackId == track.trackId }
             trackListHistory.add(0, track)
             trackListHistory = trackListHistory.take(MAX_AMOUNT_HISTORY_ITEMS).toMutableList()
-            searchHistory.saveSearchHistory(trackListHistory)
+            getTrackHistorySharedPreferences.saveSearchHistory(trackListHistory)
             startPlayer(track)
         }
     }

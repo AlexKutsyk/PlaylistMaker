@@ -1,17 +1,17 @@
 package com.practicum.playlistmaker.domain.impl
 
-import com.practicum.playlistmaker.data.dto.TrackSearchRequest
-import com.practicum.playlistmaker.domain.api.TrackInteractor
-import com.practicum.playlistmaker.domain.api.TrackRepository
+import com.practicum.playlistmaker.domain.api.ApiTrackInteractor
+import com.practicum.playlistmaker.domain.api.ApiTrackRepository
 
-class TrackInteractorImpl(private val repository: TrackRepository) : TrackInteractor {
+class TrackInteractorImpl(private val repository: ApiTrackRepository) : ApiTrackInteractor {
     override fun getTrack(
-        trackSearchRequest: TrackSearchRequest,
-        consumer: TrackInteractor.TrackConsumer
+        expression: String,
+        consumer: ApiTrackInteractor.TrackConsumer
     ) {
         val thread = Thread {
-    consumer.consume(repository.getTrack(trackSearchRequest))
+    consumer.consume(repository.getTrack(expression))
         }
         thread.start()
     }
+
 }
