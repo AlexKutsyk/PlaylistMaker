@@ -2,10 +2,12 @@ package com.practicum.playlistmaker
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
+import com.practicum.playlistmaker.ui.settings.SETTINGS
+import com.practicum.playlistmaker.ui.settings.SWITCH_KEY
 
 class App: Application() {
 
-    var darkTheme = false
+    private var darkTheme = false
 
     override fun onCreate() {
         super.onCreate()
