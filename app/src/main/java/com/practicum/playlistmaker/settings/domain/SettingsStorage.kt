@@ -1,6 +1,6 @@
 package com.practicum.playlistmaker.settings.domain
 
-interface SettingsRepository {
+interface SettingsStorage {
     fun saveSettings(toggle: Boolean)
     fun getSettings(): Boolean
 }

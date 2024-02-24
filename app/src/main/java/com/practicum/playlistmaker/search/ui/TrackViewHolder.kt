@@ -1,6 +1,5 @@
 package com.practicum.playlistmaker.search.ui
 
-import android.app.Application
 import android.content.Context
 import android.icu.text.SimpleDateFormat
 import android.util.TypedValue

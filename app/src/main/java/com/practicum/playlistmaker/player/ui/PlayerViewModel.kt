@@ -6,16 +6,15 @@ import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
 import com.practicum.playlistmaker.player.ui.models.PlayStatus
 import com.practicum.playlistmaker.player.ui.models.TrackScreenState
 import com.practicum.playlistmaker.search.domain.models.Track
 
 const val STEP_TO_SHOW_TIMER = 500L
 
-class PlayerViewModel(val track: Track) : ViewModel() {
+class PlayerViewModel(
+    val track: Track,
+    ) : ViewModel() {
 
     private val mediaPlayer = MediaPlayer()
 
@@ -75,14 +74,5 @@ class PlayerViewModel(val track: Track) : ViewModel() {
         }
     }
 
-    companion object {
-        fun getViewModelFactory(track: Track): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                PlayerViewModel(
-                    track
-                )
-            }
-        }
-    }
 }
 

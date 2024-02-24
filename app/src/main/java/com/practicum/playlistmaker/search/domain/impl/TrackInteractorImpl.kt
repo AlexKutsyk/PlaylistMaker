@@ -5,7 +5,9 @@ import com.practicum.playlistmaker.search.domain.api.ApiTrackRepository
 import com.practicum.playlistmaker.util.Resource
 
 
-class TrackInteractorImpl(private val repository: ApiTrackRepository) : ApiTrackInteractor {
+class TrackInteractorImpl(
+    private val repository: ApiTrackRepository
+) : ApiTrackInteractor {
 
     override fun getTrack(
         expression: String,

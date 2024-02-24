@@ -1,14 +1,17 @@
 package com.practicum.playlistmaker.settings.domain.impl
 
 import com.practicum.playlistmaker.settings.domain.SettingsInteractor
-import com.practicum.playlistmaker.settings.domain.SettingsRepository
+import com.practicum.playlistmaker.settings.domain.SettingsStorage
 
-class SettingsInteractorImpl(private val settingsRepository: SettingsRepository) : SettingsInteractor {
+class SettingsInteractorImpl(
+    private val settingsStorage: SettingsStorage
+) : SettingsInteractor {
+
     override fun saveSettings(toggle: Boolean) {
-        settingsRepository.saveSettings(toggle)
+        settingsStorage.saveSettings(toggle)
     }
 
     override fun getSettings(): Boolean {
-        return settingsRepository.getSettings()
+        return settingsStorage.getSettings()
     }
 }

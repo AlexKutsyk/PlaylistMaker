@@ -1,12 +1,13 @@
 package com.practicum.playlistmaker.search.domain.impl
 
-import com.practicum.playlistmaker.search.domain.api.ApiSharedPreferencesInteractor
-import com.practicum.playlistmaker.search.domain.api.ApiSharedPreferencesRepository
+import com.practicum.playlistmaker.search.domain.api.ApiSharedPreferencesHistorySearchInteractor
+import com.practicum.playlistmaker.search.domain.api.ApiSharedPreferencesHistorySearchStorage
 import com.practicum.playlistmaker.search.domain.models.Track
 
 
-class SharedPreferencesInteractorImpl(private val sharedPreferencesRepository: ApiSharedPreferencesRepository) :
-    ApiSharedPreferencesInteractor {
+class SharedPreferencesHistorySearchInteractorImpl(
+    private val sharedPreferencesRepository: ApiSharedPreferencesHistorySearchStorage
+) : ApiSharedPreferencesHistorySearchInteractor {
     override fun saveSearchHistory(trackListHistory: MutableList<Track>) {
         sharedPreferencesRepository.saveSearchHistory(trackListHistory)
     }

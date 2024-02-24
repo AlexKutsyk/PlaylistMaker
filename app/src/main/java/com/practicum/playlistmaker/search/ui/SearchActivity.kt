@@ -17,10 +17,11 @@ import com.practicum.playlistmaker.player.ui.KEY_TRACK
 import com.practicum.playlistmaker.player.ui.PlayerActivity
 import com.practicum.playlistmaker.search.ui.models.HistoryListState
 import com.practicum.playlistmaker.search.ui.models.TrackState
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchActivity : AppCompatActivity() {
 
-    private lateinit var viewModel: SearchViewModel
+    private val viewModel: SearchViewModel by viewModel()
 
     private lateinit var binding: ActivitySearchBinding
 
@@ -34,11 +35,6 @@ class SearchActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        viewModel = ViewModelProvider(
-            this,
-            SearchViewModel.getViewModelFactory(applicationContext)
-        )[SearchViewModel::class.java]
 
         viewModel.getStateSearchLiveData().observe(this) {
             render(it)

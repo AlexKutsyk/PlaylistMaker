@@ -8,7 +8,9 @@ import com.practicum.playlistmaker.search.domain.models.Track
 import com.practicum.playlistmaker.util.Resource
 
 
-class TrackRepositoryImpl(private val networkClient: NetworkClient, val context: Context) :
+class TrackRepositoryImpl(
+    private val networkClient: NetworkClient,
+    val context: Context) :
     ApiTrackRepository {
 
     override fun getTrack(expression: String): Resource<List<Track>> {
