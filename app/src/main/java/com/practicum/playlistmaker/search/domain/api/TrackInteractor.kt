@@ -2,7 +2,7 @@ package com.practicum.playlistmaker.search.domain.api
 
 import com.practicum.playlistmaker.search.domain.models.Track
 
-interface ApiTrackInteractor {
+interface TrackInteractor {
     fun getTrack(expression: String, consumer: TrackConsumer)
 
     interface TrackConsumer {

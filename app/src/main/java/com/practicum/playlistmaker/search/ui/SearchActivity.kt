@@ -9,7 +9,6 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import androidx.core.view.isVisible
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.practicum.playlistmaker.databinding.ActivitySearchBinding
 import com.practicum.playlistmaker.search.domain.models.Track
@@ -168,7 +167,7 @@ class SearchActivity : AppCompatActivity() {
         val current = isClickAllow
         if (isClickAllow) {
             isClickAllow = false
-            handler.postDelayed({ isClickAllow = true }, CLICK_DEBOUNCE_DELAY)
+            handler.postDelayed({ isClickAllow = true }, CLICK_DEBOUNCE_DELAY_MILLIS)
         }
         return current
     }
@@ -214,7 +213,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private companion object {
-        const val CLICK_DEBOUNCE_DELAY = 1000L
+        const val CLICK_DEBOUNCE_DELAY_MILLIS = 1000L
     }
 }
 

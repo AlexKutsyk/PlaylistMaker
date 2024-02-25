@@ -1,8 +1,8 @@
 package com.practicum.playlistmaker.di
 
-import com.practicum.playlistmaker.search.domain.api.ApiSharedPreferencesHistorySearchInteractor
-import com.practicum.playlistmaker.search.domain.api.ApiTrackInteractor
-import com.practicum.playlistmaker.search.domain.impl.SharedPreferencesHistorySearchInteractorImpl
+import com.practicum.playlistmaker.search.domain.api.TrackHistoryInteractor
+import com.practicum.playlistmaker.search.domain.api.TrackInteractor
+import com.practicum.playlistmaker.search.domain.impl.TrackHistoryInteractorImpl
 import com.practicum.playlistmaker.search.domain.impl.TrackInteractorImpl
 import com.practicum.playlistmaker.settings.domain.SettingsInteractor
 import com.practicum.playlistmaker.settings.domain.impl.SettingsInteractorImpl
@@ -13,19 +13,19 @@ import org.koin.dsl.module
 
 val interactorModule = module {
 
-    single <ApiTrackInteractor> {
+    factory <TrackInteractor> {
         TrackInteractorImpl(get())
     }
 
-    single <ApiSharedPreferencesHistorySearchInteractor> {
-        SharedPreferencesHistorySearchInteractorImpl(get())
+    factory <TrackHistoryInteractor> {
+        TrackHistoryInteractorImpl(get())
     }
 
-    single <SettingsInteractor> {
+    factory <SettingsInteractor> {
         SettingsInteractorImpl(get())
     }
 
-    single <SharingInteractor> {
-        SharingInteractorImpl(get(), androidContext())
+    factory <SharingInteractor> {
+        SharingInteractorImpl(get())
     }
 }

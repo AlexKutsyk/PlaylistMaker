@@ -10,11 +10,9 @@ import com.practicum.playlistmaker.player.ui.models.PlayStatus
 import com.practicum.playlistmaker.player.ui.models.TrackScreenState
 import com.practicum.playlistmaker.search.domain.models.Track
 
-const val STEP_TO_SHOW_TIMER = 500L
-
 class PlayerViewModel(
     val track: Track,
-    ) : ViewModel() {
+) : ViewModel() {
 
     private val mediaPlayer = MediaPlayer()
 
@@ -70,9 +68,12 @@ class PlayerViewModel(
     private val currentTimeTrack = object : Runnable {
         override fun run() {
             playStatusLiveData.postValue(PlayStatus.Play(mediaPlayer.currentPosition.toLong()))
-            handler.postDelayed(this, STEP_TO_SHOW_TIMER)
+            handler.postDelayed(this, STEP_TO_SHOW_TIMER_MILLIS)
         }
     }
 
+    private companion object {
+        const val STEP_TO_SHOW_TIMER_MILLIS = 500L
+    }
 }
 
