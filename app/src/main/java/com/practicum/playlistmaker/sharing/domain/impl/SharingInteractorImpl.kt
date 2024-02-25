@@ -1,37 +1,38 @@
 package com.practicum.playlistmaker.sharing.domain.impl
 
-import android.content.Context
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.sharing.domain.ExternalNavigator
 import com.practicum.playlistmaker.sharing.domain.SharingInteractor
-import com.practicum.playlistmaker.sharing.domain.models.EmailData
+import com.practicum.playlistmaker.sharing.domain.models.EmailDataId
 
-class SharingInteractorImpl(private val externalNavigator: ExternalNavigator, val context: Context) : SharingInteractor {
+class SharingInteractorImpl(
+    private val externalNavigator: ExternalNavigator,
+) : SharingInteractor {
 
     override fun shareApp() {
-        externalNavigator.shareApp(getShareAppLink())
+        externalNavigator.shareApp(getShareAppIdLink())
     }
 
     override fun openTerm() {
-        externalNavigator.openTerm(getTermLink())
+        externalNavigator.openTerm(getTermIdLink())
     }
 
     override fun openSupport() {
-        externalNavigator.openSupport(getSupportEmailData())
+        externalNavigator.openSupport(getSupportEmailIdData())
     }
 
-    private fun getShareAppLink(): String {
-        return context.getString(R.string.link_share)
+    private fun getShareAppIdLink(): Int {
+        return R.string.link_share
     }
 
-    private fun getSupportEmailData(): EmailData {
-        val email = context.getString(R.string.email_adress)
-        val subject = context.getString(R.string.email_subject)
-        val message = context.getString(R.string.email_message)
-        return EmailData(email, subject, message)
+    private fun getSupportEmailIdData(): EmailDataId {
+        val emailId = R.string.email_adress
+        val subjectId = R.string.email_subject
+        val messageId = R.string.email_message
+        return EmailDataId(emailId, subjectId, messageId)
     }
 
-    private fun getTermLink(): String {
-        return context.getString(R.string.link_agreement)
+    private fun getTermIdLink(): Int {
+        return R.string.link_agreement
     }
 }

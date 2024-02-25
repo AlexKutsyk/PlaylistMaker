@@ -1,25 +1,20 @@
 package com.practicum.playlistmaker.search.ui
 
-import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.practicum.playlistmaker.search.domain.api.ApiSharedPreferencesInteractor
-import com.practicum.playlistmaker.search.domain.api.ApiTrackInteractor
+import com.practicum.playlistmaker.search.domain.api.TrackHistoryInteractor
+import com.practicum.playlistmaker.search.domain.api.TrackInteractor
 import com.practicum.playlistmaker.search.domain.models.Track
 import com.practicum.playlistmaker.search.ui.models.HistoryListState
 import com.practicum.playlistmaker.search.ui.models.TrackState
-import com.practicum.playlistmaker.util.Creator
 
 class SearchViewModel(
-    private val trackHistorySharedPreferences: ApiSharedPreferencesInteractor,
-    private val trackInteractor: ApiTrackInteractor
+    private val trackHistorySharedPreferences: TrackHistoryInteractor,
+    private val trackInteractor: TrackInteractor,
 ) : ViewModel() {
 
     private var stateSearchLiveData = MutableLiveData<TrackState>()
@@ -43,7 +38,7 @@ class SearchViewModel(
 
             renderSearchState(TrackState.Loading)
 
-            trackInteractor.getTrack(changedText, object : ApiTrackInteractor.TrackConsumer {
+            trackInteractor.getTrack(changedText, object : TrackInteractor.TrackConsumer {
                 override fun consume(
                     foundsTracks: List<Track>?,
                     typeError: Int?
@@ -75,7 +70,7 @@ class SearchViewModel(
 
         val searchRunnable = Runnable { search(changedText) }
 
-        val postTime = SystemClock.uptimeMillis() + SEARCH_DEBOUNCE_DELAY
+        val postTime = SystemClock.uptimeMillis() + SEARCH_DEBOUNCE_DELAY_MILLIS
 
         handler.postAtTime(
             searchRunnable,
@@ -104,22 +99,9 @@ class SearchViewModel(
         stateListHistoryLiveData.postValue(HistoryListState.Content(trackListHistory))
     }
 
-    companion object {
-
-        const val SEARCH_DEBOUNCE_DELAY = 2000L
+    private companion object {
+        const val SEARCH_DEBOUNCE_DELAY_MILLIS = 2000L
         const val MAX_AMOUNT_HISTORY_ITEMS = 10
         val SEARCH_REQUEST_TOKEN = Any()
-
-        fun getViewModelFactory(context: Context): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val trackHistorySharedPreferences =
-                    Creator.provideSharedPreferencesInteractor(context)
-                val trackInteractor = Creator.provideTrackInteractor(context)
-                SearchViewModel(
-                    trackHistorySharedPreferences,
-                    trackInteractor,
-                )
-            }
-        }
     }
 }

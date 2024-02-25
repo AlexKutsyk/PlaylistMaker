@@ -3,13 +3,15 @@ package com.practicum.playlistmaker.search.data
 import android.content.Context
 import com.practicum.playlistmaker.search.data.dto.TrackSearchRequest
 import com.practicum.playlistmaker.search.data.dto.TracksSearchResponse
-import com.practicum.playlistmaker.search.domain.api.ApiTrackRepository
+import com.practicum.playlistmaker.search.domain.api.TrackRepository
 import com.practicum.playlistmaker.search.domain.models.Track
 import com.practicum.playlistmaker.util.Resource
 
 
-class TrackRepositoryImpl(private val networkClient: NetworkClient, val context: Context) :
-    ApiTrackRepository {
+class TrackRepositoryImpl(
+    private val networkClient: NetworkClient,
+    val context: Context) :
+    TrackRepository {
 
     override fun getTrack(expression: String): Resource<List<Track>> {
         val response = networkClient.doRequest(TrackSearchRequest(expression))
