@@ -123,7 +123,7 @@
             />
 
         <LinearLayout
-            android:id="@+id/placeholder_error_search"
+            android:id="@+id/placeholderErrorSearch"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_horizontal"
@@ -134,7 +134,8 @@
             <FrameLayout
                 android:layout_width="@dimen/_120dp"
                 android:layout_height="@dimen/_120dp"
-                android:layout_marginTop="102dp">
+                android:layout_marginTop="102dp"
+                >
 
                 <ImageView
                     android:layout_width="wrap_content"
