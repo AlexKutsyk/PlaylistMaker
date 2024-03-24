@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.player.ui.models
+package com.practicum.playlistmaker.player.presentation.models
 
 sealed interface PlayStatus {
     object Loading: PlayStatus

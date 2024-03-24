@@ -5,34 +5,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/colorSecondary"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".search.ui.SearchFragment"
+    >
 
-    <LinearLayout
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="@dimen/gap_52dp"
+        android:layout_gravity="center_vertical"
+        android:fontFamily="@font/ys_display_medium"
+        android:text="@string/main_Menu_Search"
+        android:textColor="?attr/colorOnBackground"
+        android:textFontWeight="500"
+        android:textSize="@dimen/text_size_22"
         android:layout_marginHorizontal="@dimen/gap_16dp"
-        android:orientation="horizontal">
-
-        <ImageButton
-            android:id="@+id/button_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="?attr/colorSecondary"
-            app:srcCompat="@drawable/arrow_back"
-            app:tint="?attr/colorOnBackground" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="@dimen/gap_24dp"
-            android:fontFamily="@font/ys_display_medium"
-            android:text="@string/main_Menu_Search"
-            android:textColor="?attr/colorOnBackground"
-            android:textFontWeight="500"
-            android:textSize="@dimen/text_size_22" />
-    </LinearLayout>
+        android:gravity="center_vertical"
+        />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -46,7 +34,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingStart="@dimen/_12dp"
-            app:srcCompat="@drawable/search"
+            app:srcCompat="@drawable/icon_search"
             app:tint="?attr/colorOnContainer" />
 
         <EditText
@@ -81,14 +69,12 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            >
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -102,8 +88,7 @@
                     android:layout_height="@dimen/_44dp"
                     android:indeterminate="true"
                     android:indeterminateTint="@color/azure"
-                    android:visibility="gone"
-                     />
+                    android:visibility="gone" />
 
             </LinearLayout>
 
@@ -119,11 +104,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginHorizontal="@dimen/_12dp"
-            android:layout_marginVertical="@dimen/gap_16dp"
-            />
+            android:layout_marginVertical="@dimen/gap_16dp" />
 
         <LinearLayout
-            android:id="@+id/placeholder_error_search"
+            android:id="@+id/placeholderErrorSearch"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_horizontal"

@@ -1,28 +1,31 @@
 package com.practicum.playlistmaker.search.ui
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.practicum.playlistmaker.databinding.ActivitySearchBinding
-import com.practicum.playlistmaker.search.domain.models.Track
+import com.practicum.playlistmaker.databinding.FragmentSearchBinding
 import com.practicum.playlistmaker.player.ui.KEY_TRACK
 import com.practicum.playlistmaker.player.ui.PlayerActivity
+import com.practicum.playlistmaker.search.domain.models.Track
 import com.practicum.playlistmaker.search.ui.models.HistoryListState
 import com.practicum.playlistmaker.search.ui.models.TrackState
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SearchActivity : AppCompatActivity() {
+class SearchFragment : Fragment() {
+
+    private var _binding: FragmentSearchBinding? = null
+    private val binding get() = _binding!!
 
     private val viewModel: SearchViewModel by viewModel()
-
-    private lateinit var binding: ActivitySearchBinding
 
     private var inputText = ""
 
@@ -30,16 +33,22 @@ class SearchActivity : AppCompatActivity() {
 
     private val handler = Handler(Looper.getMainLooper())
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivitySearchBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentSearchBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
-        viewModel.getStateSearchLiveData().observe(this) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewModel.getStateSearchLiveData().observe(viewLifecycleOwner) {
             render(it)
         }
 
-        viewModel.getStateListHistoryLiveData().observe(this) {
+        viewModel.getStateListHistoryLiveData().observe(viewLifecycleOwner) {
 
             when (it) {
 
@@ -53,10 +62,6 @@ class SearchActivity : AppCompatActivity() {
                     makeRecycleViewHistory(it.tracks)
                 }
             }
-        }
-
-        binding.buttonBack.setOnClickListener {
-            finish()
         }
 
         binding.clearText.setOnClickListener {
@@ -123,9 +128,13 @@ class SearchActivity : AppCompatActivity() {
         })
 
         binding.trackRecyclerView.layoutManager =
-            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         binding.trackRecyclerView.adapter = trackAdapter
+    }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun clearButtonVisibility(s: CharSequence?): Int {
@@ -140,12 +149,12 @@ class SearchActivity : AppCompatActivity() {
         adapterHistory.trackList = trackListHistory as ArrayList<Track>
 
         binding.trackHistoryRecyclerView.layoutManager =
-            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         binding.trackHistoryRecyclerView.adapter = adapterHistory
     }
 
     private fun startPlayer(track: Track) {
-        val playerIntent = Intent(this@SearchActivity, PlayerActivity::class.java)
+        val playerIntent = Intent(context, PlayerActivity::class.java)
         playerIntent.putExtra(KEY_TRACK, track)
         startActivity(playerIntent)
     }
@@ -216,4 +225,3 @@ class SearchActivity : AppCompatActivity() {
         const val CLICK_DEBOUNCE_DELAY_MILLIS = 1000L
     }
 }
-
