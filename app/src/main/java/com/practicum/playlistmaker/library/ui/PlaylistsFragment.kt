@@ -28,4 +28,7 @@ class PlaylistsFragment : Fragment() {
         _binding = null
     }
 
+    companion object {
+        fun newInstance() = PlaylistsFragment()
+    }
 }

@@ -33,13 +33,12 @@
         app:itemActiveIndicatorStyle="@null"
         app:itemIconSize="@dimen/gap_24dp"
         app:itemIconTint="@drawable/colors_bottom_navigation_bar"
-        app:itemTextColor="@drawable/colors_bottom_navigation_bar"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:menu="@menu/bottom_navigation"
-        app:itemTextAppearanceActiveBoldEnabled="false"
         app:itemPaddingBottom="@dimen/_12dp"
         app:itemPaddingTop="@dimen/_12dp"
+        app:itemTextAppearanceActiveBoldEnabled="false"
         app:itemTextAppearanceInactive="@dimen/title_size_10_bottom_navigation"
-        />
+        app:itemTextColor="@drawable/colors_bottom_navigation_bar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:menu="@menu/bottom_navigation" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -6,10 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.practicum.playlistmaker.databinding.FragmentFavoritesBinding
-<<<<<<< HEAD
 import com.practicum.playlistmaker.library.presentation.FavoritesViewModel
-=======
->>>>>>> origin/dev
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FavoritesFragment : Fragment() {
@@ -26,15 +23,12 @@ class FavoritesFragment : Fragment() {
         return binding.root
     }
 
-<<<<<<< HEAD
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-=======
-    companion object {
+    }
 
-        @JvmStatic
+    companion object {
         fun newInstance() = FavoritesFragment()
->>>>>>> origin/dev
     }
 }
