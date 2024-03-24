@@ -118,7 +118,8 @@
             <FrameLayout
                 android:layout_width="@dimen/_120dp"
                 android:layout_height="@dimen/_120dp"
-                android:layout_marginTop="102dp">
+                android:layout_marginTop="102dp"
+                >
 
                 <ImageView
                     android:layout_width="wrap_content"
