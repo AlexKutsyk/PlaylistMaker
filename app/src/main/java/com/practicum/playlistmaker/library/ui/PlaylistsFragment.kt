@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.practicum.playlistmaker.databinding.FragmentPlaylistsBinding
+import com.practicum.playlistmaker.library.presentation.PlayListsViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlaylistsFragment : Fragment() {
@@ -22,9 +23,12 @@ class PlaylistsFragment : Fragment() {
         return binding.root
     }
 
-    companion object {
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
-        @JvmStatic
+    companion object {
         fun newInstance() = PlaylistsFragment()
     }
 }

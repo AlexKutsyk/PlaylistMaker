@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.player.ui
+package com.practicum.playlistmaker.player.presentation
 
 import android.media.MediaPlayer
 import android.os.Handler
@@ -6,8 +6,8 @@ import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.practicum.playlistmaker.player.ui.models.PlayStatus
-import com.practicum.playlistmaker.player.ui.models.TrackScreenState
+import com.practicum.playlistmaker.player.presentation.models.PlayStatus
+import com.practicum.playlistmaker.player.presentation.models.TrackScreenState
 import com.practicum.playlistmaker.search.domain.models.Track
 
 class PlayerViewModel(
@@ -23,7 +23,15 @@ class PlayerViewModel(
 
     init {
         statePlayerScreenLiveData.postValue(TrackScreenState.Content(track))
-        preparePlayer()
+        checkUrlTrack()
+    }
+
+    private fun checkUrlTrack() {
+        if (track.previewUrl.isNullOrEmpty()) {
+            statePlayerScreenLiveData.postValue(TrackScreenState.NoDemo(track))
+        } else {
+            preparePlayer()
+        }
     }
 
     fun getStatePlayerScreenLiveData(): LiveData<TrackScreenState> = statePlayerScreenLiveData
@@ -32,7 +40,7 @@ class PlayerViewModel(
     fun getPlayStatusLiveData(): LiveData<PlayStatus> = playStatusLiveData
 
     private fun preparePlayer() {
-        mediaPlayer.setDataSource(track.previewUrl)
+        if (!track.previewUrl.isNullOrEmpty()) mediaPlayer.setDataSource(track.previewUrl)
         mediaPlayer.prepareAsync()
 
         mediaPlayer.setOnPreparedListener {

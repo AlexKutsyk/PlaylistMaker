@@ -9,8 +9,9 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.ActivityPlayerBinding
-import com.practicum.playlistmaker.player.ui.models.PlayStatus
-import com.practicum.playlistmaker.player.ui.models.TrackScreenState
+import com.practicum.playlistmaker.player.presentation.PlayerViewModel
+import com.practicum.playlistmaker.player.presentation.models.PlayStatus
+import com.practicum.playlistmaker.player.presentation.models.TrackScreenState
 import com.practicum.playlistmaker.search.domain.models.Track
 import com.practicum.playlistmaker.search.ui.dpToPx
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -27,8 +28,6 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private lateinit var binding: ActivityPlayerBinding
-
-    private var urlTrack: String? = null
 
     private val formatTimeTrack: SimpleDateFormat by lazy {
         SimpleDateFormat(
@@ -57,8 +56,6 @@ class PlayerActivity : AppCompatActivity() {
             intent.getParcelableExtra(KEY_TRACK)!!
         }
 
-        urlTrack = track.previewUrl
-
         binding.playButton.setOnClickListener {
             viewModel.startPlayer()
         }
@@ -76,21 +73,17 @@ class PlayerActivity : AppCompatActivity() {
 
                 is TrackScreenState.Content -> {
                     changeScreenPlayer(false)
-                    binding.apply {
-                        nameTrack.text = track.trackName
-                        nameArtist.text = track.artistName
-                        durationValue.text = formatTimeTrack.format(track.trackTimeMillis)
-                    }
-                    showCowerAlbum(track)
-                    checkAndShowAlbum(track)
-                    binding.yearValue.text = formatYearTrack.format(
-                        SimpleDateFormat(getString(R.string.year_track_yyyy)).parse(track.releaseDate)
-                    )
-                    binding.apply {
-                        genreValue.text = track.primaryGenreName
-                        countryValue.text = track.country
-                        timePlaying.text = formatTimeTrack.format(START_TIME)
-                    }
+                    showValueTrack(it.track)
+                    showCowerAlbum(it.track)
+                    checkAndShowAlbum(it.track)
+                }
+
+                is TrackScreenState.NoDemo -> {
+                    changeScreenPlayer(false)
+                    showValueTrack(it.track)
+                    showCowerAlbum(it.track)
+                    checkAndShowAlbum(it.track)
+                    showScreenPlayerWODemo()
                 }
             }
         }
@@ -182,6 +175,26 @@ class PlayerActivity : AppCompatActivity() {
                 countryValue.isVisible = true
             }
         }
+    }
+
+    private fun showValueTrack(track: Track) {
+        binding.apply {
+            with(track) {
+                nameTrack.text = trackName
+                nameArtist.text = artistName
+                durationValue.text = formatTimeTrack.format(track.trackTimeMillis)
+                genreValue.text = primaryGenreName
+                countryValue.text = country
+                timePlaying.text = formatTimeTrack.format(START_TIME)
+                yearValue.text = formatYearTrack.format(
+                    SimpleDateFormat(getString(R.string.year_track_yyyy)).parse(track.releaseDate)
+                )
+            }
+        }
+    }
+
+    private fun showScreenPlayerWODemo() {
+        binding.timePlaying.text = "No Demo"
     }
 
     private companion object {
