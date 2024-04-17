@@ -10,8 +10,8 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.ActivityPlayerBinding
 import com.practicum.playlistmaker.player.presentation.PlayerViewModel
-import com.practicum.playlistmaker.player.presentation.models.PlayStatus
-import com.practicum.playlistmaker.player.presentation.models.TrackScreenState
+import com.practicum.playlistmaker.player.presentation.models.PlayerStatus
+import com.practicum.playlistmaker.player.presentation.models.PlayerScreenState
 import com.practicum.playlistmaker.search.domain.models.Track
 import com.practicum.playlistmaker.search.ui.dpToPx
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -67,62 +67,31 @@ class PlayerActivity : AppCompatActivity() {
         viewModel.getStatePlayerScreenLiveData().observe(this) {
 
             when (it) {
-                is TrackScreenState.Loading -> {
+                is PlayerScreenState.Loading -> {
                     changeScreenPlayer(true)
                 }
 
-                is TrackScreenState.Content -> {
+                is PlayerScreenState.Content -> {
                     changeScreenPlayer(false)
-                    showValueTrack(it.track)
+                    showTrackData(it.track)
                     showCowerAlbum(it.track)
+                    checkAndShowYear(it.track)
                     checkAndShowAlbum(it.track)
                 }
 
-                is TrackScreenState.NoDemo -> {
+                is PlayerScreenState.NoDemo -> {
                     changeScreenPlayer(false)
-                    showValueTrack(it.track)
+                    showTrackData(it.track)
                     showCowerAlbum(it.track)
                     checkAndShowAlbum(it.track)
+                    checkAndShowYear(it.track)
                     showScreenPlayerWODemo()
                 }
             }
         }
 
         viewModel.getPlayStatusLiveData().observe(this) {
-
-            when (it) {
-                is PlayStatus.Loading -> {
-                    binding.apply {
-                        playButton.isVisible = true
-                        pauseButton.isVisible = false
-                        playButton.isEnabled = true
-                    }
-                }
-
-                is PlayStatus.Play -> {
-                    binding.apply {
-                        playButton.isVisible = false
-                        pauseButton.isVisible = true
-                        timePlaying.text = formatTimeTrack.format(it.progress)
-                    }
-                }
-
-                is PlayStatus.Pause -> {
-                    binding.apply {
-                        playButton.isVisible = true
-                        playButton.isEnabled = true
-                        pauseButton.isVisible = false
-                    }
-                }
-
-                is PlayStatus.Finish -> {
-                    binding.apply {
-                        playButton.isVisible = true
-                        pauseButton.isVisible = false
-                        timePlaying.text = formatTimeTrack.format(START_TIME)
-                    }
-                }
-            }
+            showPlayerData(it)
         }
     }
 
@@ -136,6 +105,17 @@ class PlayerActivity : AppCompatActivity() {
             binding.albumGroup.visibility = View.GONE
         } else {
             binding.albumValue.text = track.collectionName
+        }
+    }
+
+    private fun checkAndShowYear(track: Track) {
+        if (track.releaseDate.isNullOrEmpty()) {
+            binding.yearValue.visibility = View.GONE
+            binding.itemNameYear.visibility = View.GONE
+        } else {
+            binding.yearValue.text = formatYearTrack.format(
+                SimpleDateFormat(getString(R.string.year_track_yyyy)).parse(track.releaseDate)
+            )
         }
     }
 
@@ -177,7 +157,7 @@ class PlayerActivity : AppCompatActivity() {
         }
     }
 
-    private fun showValueTrack(track: Track) {
+    private fun showTrackData(track: Track) {
         binding.apply {
             with(track) {
                 nameTrack.text = trackName
@@ -185,21 +165,23 @@ class PlayerActivity : AppCompatActivity() {
                 durationValue.text = formatTimeTrack.format(track.trackTimeMillis)
                 genreValue.text = primaryGenreName
                 countryValue.text = country
-                timePlaying.text = formatTimeTrack.format(START_TIME)
-                yearValue.text = formatYearTrack.format(
-                    SimpleDateFormat(getString(R.string.year_track_yyyy)).parse(track.releaseDate)
-                )
             }
         }
     }
 
     private fun showScreenPlayerWODemo() {
-        binding.timePlaying.text = "No Demo"
+        binding.timePlaying.text = getString(R.string.no_demo)
     }
 
-    private companion object {
-        const val START_TIME = 0
+    private fun showPlayerData(state: PlayerStatus) {
+        binding.apply {
+            playButton.isVisible = state.isPlayButtonVisible
+            pauseButton.isVisible = state.isPauseButtonVisible
+            playButton.isEnabled = true
+            timePlaying.text = state.progress
+        }
     }
+
 }
 
 const val KEY_TRACK = "track"

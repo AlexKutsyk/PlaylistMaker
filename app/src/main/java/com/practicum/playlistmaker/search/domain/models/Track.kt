@@ -13,7 +13,7 @@ data class Track(
     val releaseDate: String?,
     val primaryGenreName: String?,
     val country: String?,
-    var previewUrl: String?,
+    val previewUrl: String?,
 ) : Parcelable {
 
     constructor(parcel: Parcel) : this(
