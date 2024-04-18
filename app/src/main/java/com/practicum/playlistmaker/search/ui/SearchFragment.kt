@@ -69,7 +69,18 @@ class SearchFragment : Fragment() {
         }
 
         viewModel.getStateSearchLiveData().observe(viewLifecycleOwner) {
-            render(it)
+
+            when (it) {
+
+                is TrackState.Content -> {
+                    showResultSearchTrack(it)
+                    setContent(it.tracks)
+                }
+
+                is TrackState.Error -> showResultSearchTrack(it)
+                is TrackState.ErrorConnect -> showResultSearchTrack(it)
+                is TrackState.Loading -> showResultSearchTrack(it)
+            }
         }
 
         viewModel.getStateListHistoryLiveData().observe(viewLifecycleOwner) {
@@ -77,23 +88,27 @@ class SearchFragment : Fragment() {
             when (it) {
 
                 is HistoryListState.Content -> {
-                    binding.historySearch.isVisible = true
+                    showHistorySearch(it)
                     makeRecycleViewHistory(it.tracks)
                 }
 
                 is HistoryListState.Empty -> {
-                    binding.historySearch.isVisible = false
+                    showHistorySearch(it)
                     makeRecycleViewHistory(it.tracks)
                 }
+
+                is HistoryListState.Invisible -> showHistorySearch(it)
             }
         }
 
         binding.clearText.setOnClickListener {
-            binding.editTextSearch.setText("")
+            binding.apply {
+                editTextSearch.setText("")
+                trackRecyclerView.isVisible = false
+            }
         }
 
         binding.buttonRefresh.setOnClickListener {
-            binding.placeholderErrorConnect.visibility = View.GONE
             viewModel.search(inputText)
         }
 
@@ -123,7 +138,7 @@ class SearchFragment : Fragment() {
             if (hasFocus && binding.editTextSearch.text.isEmpty()) {
                 viewModel.showListHistory()
             } else {
-                binding.historySearch.visibility = View.GONE
+                viewModel.hideListHistory()
             }
         }
 
@@ -134,16 +149,8 @@ class SearchFragment : Fragment() {
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 if (binding.editTextSearch.hasFocus() && p0?.isEmpty() == true) {
                     viewModel.showListHistory()
-                    binding.placeholderErrorSearch.isVisible = false
-                    binding.placeholderErrorConnect.isVisible = false
-                    binding.trackRecyclerView.isVisible = false
                 } else {
-                    trackAdapter?.trackList?.clear()
-                    trackAdapter?.notifyDataSetChanged()
-                    binding.trackRecyclerView.visibility = View.VISIBLE
-                    binding.historySearch.visibility = View.GONE
-                    binding.placeholderErrorSearch.isVisible = false
-                    binding.placeholderErrorConnect.isVisible = false
+                    viewModel.hideListHistory()
                 }
             }
 
@@ -174,7 +181,7 @@ class SearchFragment : Fragment() {
         }
     }
 
-    private fun makeRecycleViewHistory(trackListHistory: MutableList<Track>) {
+    private fun makeRecycleViewHistory(trackListHistory: MutableList<Track>?) {
         adapterHistory?.trackList = trackListHistory as ArrayList<Track>
 
         binding.trackHistoryRecyclerView.layoutManager =
@@ -188,54 +195,37 @@ class SearchFragment : Fragment() {
         startActivity(playerIntent)
     }
 
-
-    private fun showLoading() {
-        binding.placeholderErrorConnect.visibility = View.GONE
-        binding.placeholderErrorSearch.visibility = View.GONE
-        binding.trackRecyclerView.visibility = View.GONE
-        binding.progressBar.visibility = View.VISIBLE
-    }
-
-    private fun showContent(newTrackList: List<Track>) {
-        binding.placeholderErrorConnect.visibility = View.GONE
-        binding.placeholderErrorSearch.visibility = View.GONE
-        binding.trackRecyclerView.visibility = View.VISIBLE
-        binding.progressBar.visibility = View.GONE
+    private fun setContent(newTrackList: List<Track>?) {
         trackAdapter?.trackList?.clear()
-        trackAdapter?.trackList?.addAll(newTrackList)
+        trackAdapter?.trackList?.addAll(newTrackList!!)
         trackAdapter?.notifyDataSetChanged()
     }
 
-    private fun showError() {
-        binding.placeholderErrorConnect.visibility = View.GONE
-        binding.placeholderErrorSearch.visibility = View.VISIBLE
-        binding.trackRecyclerView.visibility = View.GONE
-        binding.progressBar.visibility = View.GONE
-    }
-
-    private fun showErrorConnect() {
-        binding.placeholderErrorConnect.visibility = View.VISIBLE
-        binding.placeholderErrorSearch.visibility = View.GONE
-        binding.trackRecyclerView.visibility = View.GONE
-        binding.progressBar.visibility = View.GONE
-    }
-
-    private fun render(state: TrackState) {
-        when (state) {
-            is TrackState.Loading -> showLoading()
-            is TrackState.Content -> showContent(state.tracks)
-            is TrackState.Error -> showError()
-            is TrackState.ErrorConnect -> showErrorConnect()
-        }
-    }
-
     private fun Context.hideKeyboard(view: View) {
-        val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        val inputMethodManager =
+            getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
     private fun Fragment.hideKeyboard() {
         view?.let { activity?.hideKeyboard(it) }
+    }
+
+    private fun showHistorySearch(state: HistoryListState) {
+        binding.apply {
+            historySearch.isVisible = state.isVisibleHistoryList
+            placeholderErrorSearch.isVisible = state.isVisibleError
+            placeholderErrorConnect.isVisible = state.isVisibleError
+        }
+    }
+
+    private fun showResultSearchTrack(state: TrackState) {
+        binding.apply {
+            progressBar.isVisible = state.isVisibleLoading
+            trackRecyclerView.isVisible = state.isVisibleContent
+            placeholderErrorSearch.isVisible = state.isVisibleError
+            placeholderErrorConnect.isVisible = state.isVisibleErrorConection
+        }
     }
 
     private companion object {

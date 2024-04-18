@@ -23,13 +23,14 @@ class SearchViewModel(
     private var stateListHistoryLiveData = MutableLiveData<HistoryListState>()
     fun getStateListHistoryLiveData(): LiveData<HistoryListState> = stateListHistoryLiveData
 
-
     private var trackListSearch = ArrayList<Track>()
     private var trackListHistory: MutableList<Track> = mutableListOf()
 
     private fun renderSearchState(stateSearching: TrackState) {
         stateSearchLiveData.postValue(stateSearching)
     }
+
+    private var lastInputText: String? = null
 
     private val searchDebounceTrack = debounce<String>(
         SEARCH_DEBOUNCE_DELAY_MILLIS,
@@ -39,13 +40,10 @@ class SearchViewModel(
         search(lastInputText)
     }
 
-    private var lastInputText: String? = null
-
     fun searchDebounce(input: String) {
         if (input == lastInputText) {
             return
         }
-
         lastInputText = input
         searchDebounceTrack(lastInputText!!)
     }
@@ -54,7 +52,7 @@ class SearchViewModel(
 
         if (changedText.isNotEmpty()) {
 
-            renderSearchState(TrackState.Loading)
+            renderSearchState(TrackState.Loading())
 
             viewModelScope.launch {
                 trackInteractor.getTrack(changedText).collect { result ->
@@ -65,17 +63,19 @@ class SearchViewModel(
 
                     when {
                         trackListSearch.isNotEmpty() -> renderSearchState(
-                            TrackState.Content(trackListSearch)
+                            TrackState.Content(trackListSearch, true)
                         )
 
-                        result.second == 1 -> renderSearchState(TrackState.ErrorConnect)
+                        result.second == 1 -> renderSearchState(TrackState.ErrorConnect())
 
                         else -> {
-                            renderSearchState(TrackState.Error)
+                            renderSearchState(TrackState.Error())
                         }
                     }
                 }
             }
+        } else {
+            renderSearchState(TrackState.Content(trackListSearch, false))
         }
     }
 
@@ -88,16 +88,20 @@ class SearchViewModel(
     }
 
     fun cleanListHistory() {
-        stateListHistoryLiveData.postValue(HistoryListState.Empty(trackListHistory))
         trackHistorySharedPreferences.cleanSearchHistory()
         trackListHistory =
             trackHistorySharedPreferences.readSearchHistory()!!.toMutableList()
+        stateListHistoryLiveData.postValue(HistoryListState.Empty(trackListHistory))
     }
 
     fun showListHistory() {
         trackListHistory =
             trackHistorySharedPreferences.readSearchHistory()!!.toMutableList()
         stateListHistoryLiveData.postValue(HistoryListState.Content(trackListHistory))
+    }
+
+    fun hideListHistory() {
+        stateListHistoryLiveData.postValue(HistoryListState.Invisible())
     }
 
     private companion object {

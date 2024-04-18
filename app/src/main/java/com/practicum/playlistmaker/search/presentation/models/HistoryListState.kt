@@ -2,7 +2,12 @@ package com.practicum.playlistmaker.search.presentation.models
 
 import com.practicum.playlistmaker.search.domain.models.Track
 
-sealed interface HistoryListState {
-    data class Empty(val tracks: MutableList<Track>): HistoryListState
-    data class Content(val tracks: MutableList<Track>): HistoryListState
+sealed class HistoryListState(
+    val tracks: MutableList<Track>?,
+    val isVisibleHistoryList: Boolean,
+    val isVisibleError: Boolean
+) {
+    class Empty(tracks: MutableList<Track>) : HistoryListState(tracks, true, false)
+    class Content(tracks: MutableList<Track>) : HistoryListState(tracks, true, false)
+    class Invisible() : HistoryListState(null, false, false)
 }
