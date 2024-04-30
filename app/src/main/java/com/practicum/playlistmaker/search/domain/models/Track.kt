@@ -6,7 +6,7 @@ import android.os.Parcelable
 data class Track(
     val trackName: String?,
     val artistName: String?,
-    val trackTimeMillis: Int,
+    val trackTimeMillis: Int?,
     val artworkUrl100: String?,
     val trackId: Int,
     val collectionName: String?,
@@ -14,6 +14,9 @@ data class Track(
     val primaryGenreName: String?,
     val country: String?,
     val previewUrl: String?,
+    var id: Int = 0,
+    var isFavorite: Boolean = false,
+
 ) : Parcelable {
 
     constructor(parcel: Parcel) : this(
@@ -26,13 +29,16 @@ data class Track(
         parcel.readString(),
         parcel.readString(),
         parcel.readString(),
-        parcel.readString()
-    )
+        parcel.readString(),
+        parcel.readInt(),
+        parcel.readBoolean(),
+
+        )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(trackName)
         parcel.writeString(artistName)
-        parcel.writeInt(trackTimeMillis)
+        parcel.writeInt(trackTimeMillis ?: 0)
         parcel.writeString(artworkUrl100)
         parcel.writeInt(trackId)
         parcel.writeString(collectionName)
@@ -40,6 +46,9 @@ data class Track(
         parcel.writeString(primaryGenreName)
         parcel.writeString(country)
         parcel.writeString(previewUrl)
+        parcel.writeInt(id)
+        parcel.writeBoolean(isFavorite)
+
     }
 
     fun getCoverArtworkUrl(): String? {

@@ -12,7 +12,7 @@ class TrackHistoryInteractorImpl(
         trackHistoryStorage.saveSearchHistory(trackListHistory)
     }
 
-    override fun readSearchHistory(): Array<Track>? {
+    override fun readSearchHistory(): MutableList<Track> {
         return trackHistoryStorage.readSearchHistory()
     }
 

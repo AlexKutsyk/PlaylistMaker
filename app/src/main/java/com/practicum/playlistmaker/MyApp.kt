@@ -31,6 +31,7 @@ class MyApp() : Application() {
                 storageSettingsModule
             )
         }
+
         val providerSetting by inject<SettingsInteractor>()
         val darkThemeEnabled = providerSetting.getSettings()
         switchTheme(darkThemeEnabled)
