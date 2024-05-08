@@ -38,7 +38,6 @@ class SearchFragment : Fragment() {
     private var trackAdapter: TrackAdapter? = null
     private var adapterHistory: TrackAdapter? = null
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -68,38 +67,9 @@ class SearchFragment : Fragment() {
             startPlayer(track)
         }
 
-        viewModel.getStateSearchLiveData().observe(viewLifecycleOwner) {
+        renderSearch()
 
-            when (it) {
-
-                is TrackState.Content -> {
-                    showResultSearchTrack(it)
-                    setContent(it.tracks)
-                }
-
-                is TrackState.Error -> showResultSearchTrack(it)
-                is TrackState.ErrorConnect -> showResultSearchTrack(it)
-                is TrackState.Loading -> showResultSearchTrack(it)
-            }
-        }
-
-        viewModel.getStateListHistoryLiveData().observe(viewLifecycleOwner) {
-
-            when (it) {
-
-                is HistoryListState.Content -> {
-                    showHistorySearch(it)
-                    makeRecycleViewHistory(it.tracks)
-                }
-
-                is HistoryListState.Empty -> {
-                    showHistorySearch(it)
-                    makeRecycleViewHistory(it.tracks)
-                }
-
-                is HistoryListState.Invisible -> showHistorySearch(it)
-            }
-        }
+        renderListHistory()
 
         binding.clearText.setOnClickListener {
             binding.apply {
@@ -134,29 +104,9 @@ class SearchFragment : Fragment() {
 
         binding.editTextSearch.addTextChangedListener(simpleTextWatcher)
 
-        binding.editTextSearch.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus && binding.editTextSearch.text.isEmpty()) {
-                viewModel.showListHistory()
-            } else {
-                viewModel.hideListHistory()
-            }
-        }
+        checkEditTextOnFocus()
 
-        binding.editTextSearch.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                if (binding.editTextSearch.hasFocus() && p0?.isEmpty() == true) {
-                    viewModel.showListHistory()
-                } else {
-                    viewModel.hideListHistory()
-                }
-            }
-
-            override fun afterTextChanged(p0: Editable?) {
-            }
-        })
+        checkEditTextIsEmpty()
 
         binding.trackRecyclerView.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
@@ -181,8 +131,8 @@ class SearchFragment : Fragment() {
         }
     }
 
-    private fun makeRecycleViewHistory(trackListHistory: MutableList<Track>?) {
-        adapterHistory?.trackList = trackListHistory as ArrayList<Track>
+    private fun makeRecycleViewHistory(trackListHistory: MutableList<Track>) {
+        adapterHistory?.trackList = trackListHistory
 
         binding.trackHistoryRecyclerView.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
@@ -228,7 +178,67 @@ class SearchFragment : Fragment() {
         }
     }
 
-    private companion object {
+    private fun checkEditTextOnFocus() {
+        binding.editTextSearch.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus && binding.editTextSearch.text.isEmpty()) {
+                viewModel.showListHistory()
+            } else {
+                viewModel.hideListHistory()
+            }
+        }
+    }
+
+    private fun checkEditTextIsEmpty() {
+        binding.editTextSearch.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                if (binding.editTextSearch.hasFocus() && p0?.isEmpty() == true) {
+                    viewModel.showListHistory()
+                } else {
+                    viewModel.hideListHistory()
+                }
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+            }
+        })
+    }
+
+    private fun renderListHistory() {
+        viewModel.getStateListHistoryLiveData().observe(viewLifecycleOwner) {
+
+            when (it) {
+
+                is HistoryListState.Content -> {
+                    showHistorySearch(it)
+                    makeRecycleViewHistory(it.listHistory)
+                }
+
+                is HistoryListState.Invisible -> showHistorySearch(it)
+            }
+        }
+    }
+
+    private fun renderSearch() {
+        viewModel.getStateSearchLiveData().observe(viewLifecycleOwner) {
+
+            when (it) {
+
+                is TrackState.Content -> {
+                    showResultSearchTrack(it)
+                    setContent(it.tracks)
+                }
+
+                is TrackState.Error -> showResultSearchTrack(it)
+                is TrackState.ErrorConnect -> showResultSearchTrack(it)
+                is TrackState.Loading -> showResultSearchTrack(it)
+            }
+        }
+    }
+
+    companion object {
         const val CLICK_DEBOUNCE_DELAY_MILLIS = 1000L
     }
 }

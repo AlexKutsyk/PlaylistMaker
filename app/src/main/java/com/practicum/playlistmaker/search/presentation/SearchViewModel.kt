@@ -13,8 +13,8 @@ import com.practicum.playlistmaker.util.debounce
 import kotlinx.coroutines.launch
 
 class SearchViewModel(
-    private val trackHistorySharedPreferences: TrackHistoryInteractor,
-    private val trackInteractor: TrackInteractor,
+    private val trackHistoryInteractor: TrackHistoryInteractor,
+    private val trackInteractor: TrackInteractor
 ) : ViewModel() {
 
     private var stateSearchLiveData = MutableLiveData<TrackState>()
@@ -84,20 +84,16 @@ class SearchViewModel(
         trackListHistory.removeAll { it.trackId == track.trackId }
         trackListHistory.add(0, track)
         trackListHistory = trackListHistory.take(MAX_AMOUNT_HISTORY_ITEMS).toMutableList()
-        trackHistorySharedPreferences.saveSearchHistory(trackListHistory)
+        trackHistoryInteractor.saveSearchHistory(trackListHistory)
     }
 
     fun cleanListHistory() {
-        trackHistorySharedPreferences.cleanSearchHistory()
-        trackListHistory =
-            trackHistorySharedPreferences.readSearchHistory()!!.toMutableList()
-        stateListHistoryLiveData.postValue(HistoryListState.Empty(trackListHistory))
+        trackHistoryInteractor.cleanSearchHistory()
+        stateListHistoryLiveData.postValue(HistoryListState.Content(trackHistoryInteractor.readSearchHistory()))
     }
 
     fun showListHistory() {
-        trackListHistory =
-            trackHistorySharedPreferences.readSearchHistory()!!.toMutableList()
-        stateListHistoryLiveData.postValue(HistoryListState.Content(trackListHistory))
+        stateListHistoryLiveData.postValue(HistoryListState.Content(trackHistoryInteractor.readSearchHistory()))
     }
 
     fun hideListHistory() {

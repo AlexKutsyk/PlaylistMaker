@@ -9,10 +9,6 @@ import org.koin.dsl.module
 
 val storageSettingsModule = module {
 
-//    single {
-//        androidContext().getSharedPreferences(SETTINGS, Context.MODE_PRIVATE)
-//    }
-
     single<SettingsStorage> {
         SettingsStorageImpl(
             androidContext(),

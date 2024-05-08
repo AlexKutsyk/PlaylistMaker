@@ -189,11 +189,12 @@
         android:layout_width="@dimen/_51dp"
         android:layout_height="@dimen/_51dp"
         android:background="@drawable/round_button"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/height72Boarder"
         app:layout_constraintEnd_toEndOf="@id/rightBorder2"
         app:layout_constraintTop_toTopOf="@id/height72Boarder"
-        app:srcCompat="@drawable/favorite_off_button" />
+        app:srcCompat="@drawable/favorite_off_button"
+        tools:visibility="visible"/>
 
     <TextView
         android:id="@+id/timePlaying"

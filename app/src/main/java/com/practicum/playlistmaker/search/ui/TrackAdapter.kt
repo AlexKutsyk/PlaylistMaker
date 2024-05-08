@@ -10,7 +10,7 @@ class TrackAdapter(
     private val onTrackClickListener: OnItemClickListener,
 ) : RecyclerView.Adapter<TrackViewHolder>() {
 
-    var trackList =  ArrayList<Track>()
+    var trackList: MutableList<Track> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.track_view, parent, false)

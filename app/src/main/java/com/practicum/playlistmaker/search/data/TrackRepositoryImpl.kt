@@ -1,6 +1,7 @@
 package com.practicum.playlistmaker.search.data
 
 import android.content.Context
+import com.practicum.playlistmaker.library.data.db.AppDataBase
 import com.practicum.playlistmaker.search.data.dto.TrackSearchRequest
 import com.practicum.playlistmaker.search.data.dto.TracksSearchResponse
 import com.practicum.playlistmaker.search.domain.api.TrackRepository
@@ -12,7 +13,9 @@ import kotlinx.coroutines.flow.flow
 
 class TrackRepositoryImpl(
     private val networkClient: NetworkClient,
-    val context: Context) :
+    val context: Context,
+    private val appDataBase: AppDataBase,
+) :
     TrackRepository {
 
     override fun getTrack(expression: String): Flow<Resource<List<Track>>> = flow {
@@ -27,26 +30,41 @@ class TrackRepositoryImpl(
                 if ((response as TracksSearchResponse).results.isEmpty()) {
                     emit(Resource.Error(ERROR_EMPTY))
                 } else {
+                    val tracksIdFavorites = appDataBase.trackDao().getIdFavoritesTrack()
+
                     val result = Resource.Success(
                         response.results.map {
                             Track(
                                 it.trackName,
                                 it.artistName,
-                                it.trackTimeMillis,
+                                it.trackTimeMillis?: 0,
                                 it.artworkUrl100,
                                 it.trackId,
                                 it.collectionName,
                                 it.releaseDate,
                                 it.primaryGenreName,
                                 it.country,
-                                it.previewUrl
+                                it.previewUrl,
                             )
                         })
+
+                    checkIsFavorite(tracksIdFavorites, result)
+
                     emit(result)
                 }
             }
 
             else -> emit(Resource.Error(ERROR_SERVER))
+        }
+    }
+
+    private fun checkIsFavorite(tracksIdFavorites: List<Int>, result: Resource<List<Track>>) {
+        tracksIdFavorites.forEach { idFavorites ->
+            result.data?.forEach { track ->
+                if (idFavorites == track.trackId) {
+                    track.isFavorite = true
+                }
+            }
         }
     }
 

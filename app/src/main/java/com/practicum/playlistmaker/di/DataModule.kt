@@ -1,5 +1,8 @@
 package com.practicum.playlistmaker.di
 
+import androidx.room.Room
+import com.practicum.playlistmaker.library.data.db.AppDataBase
+import com.practicum.playlistmaker.library.data.db.entity.TrackEntity
 import com.practicum.playlistmaker.search.data.NetworkClient
 import com.practicum.playlistmaker.search.data.network.ITunesAPI
 import com.practicum.playlistmaker.search.data.network.RetrofitNetworkClient
@@ -9,6 +12,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 val dataModule = module {
+
     single<ITunesAPI> {
         Retrofit.Builder()
             .baseUrl("https://itunes.apple.com")
@@ -19,5 +23,9 @@ val dataModule = module {
 
     single<NetworkClient> {
         RetrofitNetworkClient(androidContext(), get())
+    }
+
+    single {
+        Room.databaseBuilder(androidContext(), AppDataBase::class.java, "database.db").build()
     }
 }

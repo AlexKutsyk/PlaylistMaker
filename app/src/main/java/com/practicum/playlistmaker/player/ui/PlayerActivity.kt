@@ -93,6 +93,21 @@ class PlayerActivity : AppCompatActivity() {
         viewModel.getPlayStatusLiveData().observe(this) {
             showPlayerData(it)
         }
+
+        viewModel.getFavoriteState().observe(this) { favoriteState ->
+            binding.apply {
+                favoriteButtonOn.isVisible = favoriteState.isFavorite
+                favoriteButtonOff.isVisible = !favoriteState.isFavorite
+            }
+        }
+
+        binding.favoriteButtonOn.setOnClickListener {
+            viewModel.onFavoriteClicked()
+        }
+
+        binding.favoriteButtonOff.setOnClickListener {
+            viewModel.onFavoriteClicked()
+        }
     }
 
     override fun onPause() {

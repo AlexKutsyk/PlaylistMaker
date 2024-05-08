@@ -1,5 +1,7 @@
 package com.practicum.playlistmaker.di
 
+import com.practicum.playlistmaker.library.domain.db.FavoritesInteractor
+import com.practicum.playlistmaker.library.domain.db.impl.FavoritesInteractorImpl
 import com.practicum.playlistmaker.search.domain.api.TrackHistoryInteractor
 import com.practicum.playlistmaker.search.domain.api.TrackInteractor
 import com.practicum.playlistmaker.search.domain.impl.TrackHistoryInteractorImpl
@@ -27,5 +29,9 @@ val interactorModule = module {
 
     factory <SharingInteractor> {
         SharingInteractorImpl(get())
+    }
+
+    factory <FavoritesInteractor> {
+        FavoritesInteractorImpl(get())
     }
 }

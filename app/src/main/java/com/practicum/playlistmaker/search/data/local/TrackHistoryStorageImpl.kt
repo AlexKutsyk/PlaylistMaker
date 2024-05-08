@@ -13,7 +13,7 @@ class SharedPreferencesHistoryStorageImpl(
     val context: Context,
     private val sharedPrefs: SharedPreferences,
     private val gson: Gson,
-    ) : TrackHistoryStorage {
+) : TrackHistoryStorage {
 
     override fun saveSearchHistory(trackListHistory: MutableList<Track>) {
         val trackListHistoryJson: String = gson.toJson(trackListHistory)
@@ -22,11 +22,10 @@ class SharedPreferencesHistoryStorageImpl(
             .apply()
     }
 
-    override fun readSearchHistory(): Array<Track>? {
+    override fun readSearchHistory(): MutableList<Track> {
         val trackListHistoryJson: String =
-            sharedPrefs.getString(SEARCH_HISTORY_KEY, null)
-                ?: return emptyArray()
-        return gson.fromJson(trackListHistoryJson, Array<Track>::class.java)
+            sharedPrefs.getString(SEARCH_HISTORY_KEY, null) ?: return emptyArray<Track>().toMutableList()
+        return gson.fromJson(trackListHistoryJson, Array<Track>::class.java).toMutableList()
     }
 
     override fun cleanSearchHistory() {

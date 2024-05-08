@@ -4,15 +4,26 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".library.ui.FavoritesFragment">
+    tools:context=".library.ui.FavoritesFragment"
+    android:orientation="vertical"
+    >
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/favoritesTracks_recyclerView"
+        tools:visibility="visible"
+        android:layout_marginHorizontal="@dimen/_12dp"
+        android:layout_marginVertical="@dimen/gap_16dp"
+        />
 
     <LinearLayout
-        android:id="@+id/placeholder_no_playlists"
+        android:id="@+id/placeholder_no_favorites"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        tools:visibility="visible">
+        tools:visibility="gone">
 
         <FrameLayout
             android:layout_width="@dimen/_120dp"
