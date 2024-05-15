@@ -43,7 +43,7 @@
         android:orientation="horizontal">
 
         <TextView
-            android:layout_width="@dimen/gap_0dp"
+            android:layout_width="@dimen/_0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_gravity="center_vertical"
@@ -68,7 +68,7 @@
 
         <TextView
             android:text="@string/write_to_the_support"
-            android:layout_width="@dimen/gap_0dp"
+            android:layout_width="@dimen/_0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_gravity="center_vertical"
@@ -92,7 +92,7 @@
 
         <TextView
             android:text="@string/user_agreement"
-            android:layout_width="@dimen/gap_0dp"
+            android:layout_width="@dimen/_0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_gravity="center_vertical"

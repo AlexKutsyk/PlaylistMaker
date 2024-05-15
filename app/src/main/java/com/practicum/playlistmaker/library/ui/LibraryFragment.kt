@@ -17,19 +17,36 @@ class LibraryFragment : Fragment() {
     private lateinit var tabMediator: TabLayoutMediator
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentLibraryBinding.inflate(inflater, container, false)
+        _binding = FragmentLibraryBinding.inflate(
+            inflater,
+            container,
+            false
+        )
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?
+    ) {
+        super.onViewCreated(
+            view,
+            savedInstanceState
+        )
 
-        binding.pagerView.adapter = LibraryAdapter(childFragmentManager, lifecycle)
+        binding.pagerView.adapter = LibraryAdapter(
+            childFragmentManager,
+            lifecycle
+        )
 
-        tabMediator = TabLayoutMediator(binding.tabView, binding.pagerView)
+        tabMediator = TabLayoutMediator(
+            binding.tabView,
+            binding.pagerView
+        )
         { tab, position ->
             when (position) {
                 0 -> tab.text = getString(R.string.favorites_tracks)

@@ -79,7 +79,6 @@ class SearchViewModel(
         }
     }
 
-
     fun makeHistoryList(track: Track) {
         trackListHistory.removeAll { it.trackId == track.trackId }
         trackListHistory.add(0, track)

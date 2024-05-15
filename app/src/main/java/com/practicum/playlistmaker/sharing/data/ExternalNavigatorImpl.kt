@@ -34,7 +34,7 @@ class ExternalNavigatorImpl(val context: Context) : ExternalNavigator {
         val mailData = getSupportEmailData(dataId)
         Intent(Intent.ACTION_SENDTO).apply {
             data = Uri.parse("mailto:")
-            putExtra(Intent.EXTRA_EMAIL, arrayOf(mailData.adress))
+            putExtra(Intent.EXTRA_EMAIL, arrayOf(mailData.address))
             putExtra(Intent.EXTRA_SUBJECT, mailData.subject)
             putExtra(Intent.EXTRA_TEXT, mailData.message)
             this.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -51,7 +51,7 @@ class ExternalNavigatorImpl(val context: Context) : ExternalNavigator {
     }
 
     private fun getSupportEmailData(dataId: EmailDataId): EmailData {
-        val email = context.getString(dataId.idAdress)
+        val email = context.getString(dataId.idAddress)
         val subject = context.getString(dataId.idSubject)
         val message = context.getString(dataId.idMessage)
         return EmailData(email, subject, message)

@@ -20,12 +20,14 @@
 
         <activity
             android:name=".player.ui.PlayerActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan"
+            />
 
         <activity
             android:name=".RootActivity"
             android:exported="true"
-            android:windowSoftInputMode="adjustNothing"
+            android:windowSoftInputMode="adjustPan"
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -34,5 +36,6 @@
             </intent-filter>
         </activity>
     </application>
+
 
 </manifest>

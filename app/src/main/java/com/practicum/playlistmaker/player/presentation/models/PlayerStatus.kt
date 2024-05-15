@@ -5,8 +5,24 @@ sealed class PlayerStatus(
     val isPlayButtonVisible: Boolean,
     val isPauseButtonVisible: Boolean,
 ) {
-    class Prepared : PlayerStatus("00:00", true, false)
-    class Playing(progress: String) : PlayerStatus(progress, false, true)
-    class Pause(progress: String) : PlayerStatus(progress, true, false)
-    class Finished : PlayerStatus("00:00", true, false)
+    class Prepared : PlayerStatus(
+        "00:00",
+        true,
+        false
+    )
+    class Playing(progress: String) : PlayerStatus(
+        progress,
+        false,
+        true
+    )
+    class Pause(progress: String) : PlayerStatus(
+        progress,
+        true,
+        false
+    )
+    class Finished : PlayerStatus(
+        "00:00",
+        true,
+        false
+    )
 }

@@ -8,7 +8,7 @@
     <dimen name="title_size">22sp</dimen>
     <dimen name="title_size_10_bottom_navigation">10sp</dimen>
     <dimen name="icon_gap">8dp</dimen>
-    <dimen name="gap_0dp">0dp</dimen>
+    <dimen name="_0dp">0dp</dimen>
     <dimen name="setting_line_height">60dp</dimen>
     <dimen name="gap_24dp">24dp</dimen>
     <dimen name="gap_40dp">40dp</dimen>
@@ -36,5 +36,11 @@
     <dimen name="_44dp">44dp</dimen>
     <dimen name="_160dp">160dp</dimen>
     <dimen name="_1dp">1dp</dimen>
+    <dimen name="_106dp">106dp</dimen>
+    <dimen name="_32dp">32dp</dimen>
+    <dimen name="_12sp">12sp</dimen>
+    <dimen name="_2dp">2dp</dimen>
+    <dimen name="_92dp">92dp</dimen>
+    <dimen name="_6dp">6dp</dimen>
 
 </resources>
