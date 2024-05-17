@@ -18,7 +18,7 @@ class PlaylistsViewModel(
     fun getPlaylistFromDB() {
         viewModelScope.launch {
             playlistCreatorInteractor.getPlaylists().collect { playlists ->
-                if (playlists.isNullOrEmpty()) {
+                if (playlists.isEmpty()) {
                     statePlaylist.postValue(PlaylistState.Empty())
                 } else {
                     statePlaylist.postValue(PlaylistState.Content(playlists))

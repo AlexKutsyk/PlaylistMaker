@@ -6,20 +6,38 @@ import androidx.recyclerview.widget.RecyclerView
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.library.playlist.domain.models.Playlist
 
-class PlaylistAdapter: RecyclerView.Adapter<PlaylistViewHolder>() {
+class PlaylistAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     var playlists: MutableList<Playlist> = mutableListOf()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaylistViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.playlist_grid_item, parent, false)
-        return PlaylistViewHolder(view, parent.context)
+    override fun getItemViewType(position: Int): Int {
+
+        val itemPlaylist = playlists[position]
+
+        return when (itemPlaylist.uriImageStorage.toString()) {
+            "null" -> 1
+            else -> 2
+        }
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        val view =
+            LayoutInflater.from(parent.context).inflate(R.layout.playlist_grid_item, parent, false)
+        return when (viewType) {
+            1 -> PlaylistWOCoverViewHolder(view, parent.context)
+            else -> PlaylistWCoverViewHolder(view, parent.context)
+        }
     }
 
     override fun getItemCount(): Int {
         return playlists.size
     }
 
-    override fun onBindViewHolder(holder: PlaylistViewHolder, position: Int) {
-        holder.bind(playlists[position])
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        when (holder) {
+            is PlaylistWOCoverViewHolder -> holder.bind(playlists[position])
+            is PlaylistWCoverViewHolder -> holder.bind(playlists[position])
+        }
+
     }
 }

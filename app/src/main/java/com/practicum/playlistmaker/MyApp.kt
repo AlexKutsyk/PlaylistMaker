@@ -1,7 +1,9 @@
 package com.practicum.playlistmaker
 
 import android.app.Application
+import android.webkit.PermissionRequest
 import androidx.appcompat.app.AppCompatDelegate
+import com.markodevcic.peko.PermissionRequester
 import com.practicum.playlistmaker.di.dataModule
 import com.practicum.playlistmaker.di.interactorModule
 import com.practicum.playlistmaker.di.navigationModule
@@ -31,6 +33,8 @@ class MyApp() : Application() {
                 storageSettingsModule
             )
         }
+
+        PermissionRequester.initialize(applicationContext)
 
         val providerSetting by inject<SettingsInteractor>()
         val darkThemeEnabled = providerSetting.getSettings()

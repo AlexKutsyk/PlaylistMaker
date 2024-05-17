@@ -43,7 +43,9 @@ class PlaylistCreatorFragment : Fragment() {
 
     private var uri: Uri? = null
 
-    private var imageCoverPath: File? = null
+    private var uriImageStorage: Uri? = null
+
+    private val currentTime by lazy { System.currentTimeMillis() }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -102,7 +104,7 @@ class PlaylistCreatorFragment : Fragment() {
             viewModel.createPlaylist(
                 binding.nameEditText.text.toString(),
                 binding.descriptionEditText.text.toString(),
-                imageCoverPath
+                uriImageStorage
             )
 
             requireActivity().supportFragmentManager.popBackStack()
@@ -192,15 +194,17 @@ class PlaylistCreatorFragment : Fragment() {
 
         if (uri != null) {
 
-            imageCoverPath = File(
+            val imageCoverPath = File(
                 requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), "image_cover"
             )
-            if (!imageCoverPath!!.exists()) {
-                imageCoverPath!!.mkdir()
+
+            if (!imageCoverPath.exists()) {
+                imageCoverPath.mkdir()
             }
-            val imageCoverFile = File(imageCoverPath, "${binding.nameEditText.text}.jpg")
+            val imageCoverFile = File(imageCoverPath, "$currentTime.jpg")
             val inputStream = requireContext().contentResolver.openInputStream(uri!!)
             val outputStream = FileOutputStream(imageCoverFile)
+            uriImageStorage = Uri.fromFile(imageCoverFile)
 
             BitmapFactory.decodeStream(inputStream)
                 .compress(Bitmap.CompressFormat.JPEG, 20, outputStream)

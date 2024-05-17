@@ -1,11 +1,11 @@
 package com.practicum.playlistmaker.library.playlist.presentation
 
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.practicum.playlistmaker.library.playlist.domain.PlaylistInteractor
 import com.practicum.playlistmaker.library.playlist.domain.models.Playlist
 import kotlinx.coroutines.launch
-import java.io.File
 
 class PlaylistCreatorViewModel(
     private val playlistCreatorInteractor: PlaylistInteractor,
@@ -14,13 +14,13 @@ class PlaylistCreatorViewModel(
     fun createPlaylist(
         namePlaylist: String,
         descriptionPlaylist: String?,
-        pathImageCover: File?,
+        uriImageStorage: Uri?,
     ) {
         viewModelScope.launch {
             val playlist = invokePlaylist(
                 namePlaylist,
                 descriptionPlaylist,
-                pathImageCover
+                uriImageStorage
             )
             playlistCreatorInteractor.insertPlaylist(playlist)
         }
@@ -29,10 +29,10 @@ class PlaylistCreatorViewModel(
     private fun invokePlaylist(
         namePlaylist: String,
         descriptionPlaylist: String?,
-        pathImageCover: File?
+        uriImageStorage: Uri?
     ): Playlist = Playlist(
         namePlaylist = namePlaylist,
         descriptionPlaylist = descriptionPlaylist,
-        pathImageCover = pathImageCover
+        uriImageStorage = uriImageStorage
     )
 }
