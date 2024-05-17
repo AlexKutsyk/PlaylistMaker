@@ -1,7 +1,7 @@
 package com.practicum.playlistmaker.search.data
 
 import android.content.Context
-import com.practicum.playlistmaker.library.data.db.AppDataBase
+import com.practicum.playlistmaker.library.favorites.data.db.AppDataBase
 import com.practicum.playlistmaker.search.data.dto.TrackSearchRequest
 import com.practicum.playlistmaker.search.data.dto.TracksSearchResponse
 import com.practicum.playlistmaker.search.domain.api.TrackRepository
@@ -30,6 +30,7 @@ class TrackRepositoryImpl(
                 if ((response as TracksSearchResponse).results.isEmpty()) {
                     emit(Resource.Error(ERROR_EMPTY))
                 } else {
+
                     val tracksIdFavorites = appDataBase.trackDao().getIdFavoritesTrack()
 
                     val result = Resource.Success(
@@ -58,7 +59,10 @@ class TrackRepositoryImpl(
         }
     }
 
-    private fun checkIsFavorite(tracksIdFavorites: List<Int>, result: Resource<List<Track>>) {
+    private fun checkIsFavorite(
+        tracksIdFavorites: List<Int>,
+        result: Resource<List<Track>>
+    ) {
         tracksIdFavorites.forEach { idFavorites ->
             result.data?.forEach { track ->
                 if (idFavorites == track.trackId) {

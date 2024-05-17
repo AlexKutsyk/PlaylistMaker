@@ -1,7 +1,9 @@
 package com.practicum.playlistmaker.di
 
-import com.practicum.playlistmaker.library.domain.db.FavoritesInteractor
-import com.practicum.playlistmaker.library.domain.db.impl.FavoritesInteractorImpl
+import com.practicum.playlistmaker.library.favorites.domain.db.FavoritesInteractor
+import com.practicum.playlistmaker.library.favorites.domain.db.impl.FavoritesInteractorImpl
+import com.practicum.playlistmaker.library.playlist.domain.PlaylistInteractor
+import com.practicum.playlistmaker.library.playlist.domain.impl.PlaylistInteractorImpl
 import com.practicum.playlistmaker.search.domain.api.TrackHistoryInteractor
 import com.practicum.playlistmaker.search.domain.api.TrackInteractor
 import com.practicum.playlistmaker.search.domain.impl.TrackHistoryInteractorImpl
@@ -10,7 +12,6 @@ import com.practicum.playlistmaker.settings.domain.SettingsInteractor
 import com.practicum.playlistmaker.settings.domain.impl.SettingsInteractorImpl
 import com.practicum.playlistmaker.sharing.domain.SharingInteractor
 import com.practicum.playlistmaker.sharing.domain.impl.SharingInteractorImpl
-import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
 val interactorModule = module {
@@ -33,5 +34,9 @@ val interactorModule = module {
 
     factory <FavoritesInteractor> {
         FavoritesInteractorImpl(get())
+    }
+
+    factory <PlaylistInteractor> {
+        PlaylistInteractorImpl(playlistRepository = get())
     }
 }

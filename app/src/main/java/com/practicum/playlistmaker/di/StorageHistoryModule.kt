@@ -11,7 +11,11 @@ import org.koin.dsl.module
 val storageHistoryModule = module {
 
     single<TrackHistoryStorage> {
-        SharedPreferencesHistoryStorageImpl(androidContext(), androidContext().getSharedPreferences(STORAGE, Context.MODE_PRIVATE), Gson())
+        SharedPreferencesHistoryStorageImpl(
+            androidContext(),
+            androidContext().getSharedPreferences(STORAGE, Context.MODE_PRIVATE),
+            Gson()
+        )
     }
 
 }

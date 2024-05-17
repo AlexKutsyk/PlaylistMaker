@@ -14,9 +14,10 @@ class TrackInteractorImpl(
 
     override fun getTrack(expression: String): Flow<Pair<List<Track>?, Int?>> {
 
-        return repository.getTrack(expression).map {result ->
+        return repository.getTrack(expression).map { result ->
 
             when (result) {
+
                 is Resource.Success -> {
                     Pair(result.data, null)
                 }

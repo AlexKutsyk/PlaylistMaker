@@ -9,10 +9,39 @@ sealed class TrackState(
     val isVisibleError: Boolean,
     val isVisibleErrorConection: Boolean
 ) {
-    class Loading : TrackState(null, true, false, false, false)
-    class Content(tracks: List<Track>, isVisibleContent: Boolean) :
-        TrackState(tracks, false, isVisibleContent, false, false)
+    class Loading : TrackState(
+        null,
+        true,
+        false,
+        false,
+        false
+    )
 
-    class Error : TrackState(null, false, false, true, false)
-    class ErrorConnect : TrackState(null, false, false, false, true)
+    class Content(
+        tracks: List<Track>,
+        isVisibleContent: Boolean
+    ) :
+        TrackState(
+            tracks,
+            false,
+            isVisibleContent,
+            false,
+            false
+        )
+
+    class Error : TrackState(
+        null,
+        false,
+        false,
+        true,
+        false
+    )
+
+    class ErrorConnect : TrackState(
+        null,
+        false,
+        false,
+        false,
+        true
+    )
 }

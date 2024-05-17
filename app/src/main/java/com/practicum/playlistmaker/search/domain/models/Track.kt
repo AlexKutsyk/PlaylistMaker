@@ -16,7 +16,6 @@ data class Track(
     val previewUrl: String?,
     var id: Int = 0,
     var isFavorite: Boolean = false,
-
 ) : Parcelable {
 
     constructor(parcel: Parcel) : this(
@@ -32,8 +31,7 @@ data class Track(
         parcel.readString(),
         parcel.readInt(),
         parcel.readBoolean(),
-
-        )
+    )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(trackName)
@@ -48,7 +46,6 @@ data class Track(
         parcel.writeString(previewUrl)
         parcel.writeInt(id)
         parcel.writeBoolean(isFavorite)
-
     }
 
     fun getCoverArtworkUrl(): String? {

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:bottom="@dimen/_106dp"
+        android:drawable="@drawable/ic_add_photo"
+        android:gravity="fill"
+        android:left="@dimen/_106dp"
+        android:right="@dimen/_106dp"
+        android:top="@dimen/_106dp" />
+
+    <item android:gravity="fill">
+        <shape android:shape="rectangle">
+            <stroke
+                android:width="@dimen/_1dp"
+                android:color="@color/grey"
+                android:dashWidth="@dimen/_32dp"
+                android:dashGap="@dimen/_32dp" />
+            <corners android:radius="8dp" />
+        </shape>
+        <color android:color="@color/grey" />
+    </item>
+
+</layer-list>

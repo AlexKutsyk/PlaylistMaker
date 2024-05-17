@@ -3,13 +3,18 @@ package com.practicum.playlistmaker.player.ui
 import android.os.Build.*
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.ActivityPlayerBinding
+import com.practicum.playlistmaker.library.playlist.ui.PlaylistCreatorFragment
+import com.practicum.playlistmaker.library.playlist.presentation.models.PlaylistState
 import com.practicum.playlistmaker.player.presentation.PlayerViewModel
+import com.practicum.playlistmaker.player.presentation.models.InsertTrackState
 import com.practicum.playlistmaker.player.presentation.models.PlayerStatus
 import com.practicum.playlistmaker.player.presentation.models.PlayerScreenState
 import com.practicum.playlistmaker.search.domain.models.Track
@@ -31,21 +36,29 @@ class PlayerActivity : AppCompatActivity() {
 
     private val formatTimeTrack: SimpleDateFormat by lazy {
         SimpleDateFormat(
-            getString(R.string.time_track_mm_ss),
-            Locale.getDefault()
+            getString(R.string.time_track_mm_ss), Locale.getDefault()
         )
     }
     private val formatYearTrack: SimpleDateFormat by lazy {
         SimpleDateFormat(
-            getString(R.string.year_track_yyyy),
-            Locale.getDefault()
+            getString(R.string.year_track_yyyy), Locale.getDefault()
         )
+    }
+
+    private val adapterPlaylist = PlayerAdapter { playlist ->
+
+        viewModel.insertTrackToDB(track, playlist)
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val bottomSheetBehavior = BottomSheetBehavior.from(binding.playlistBottomSheet)
+
+        binding.playlistsRecycleView.adapter = adapterPlaylist
 
         binding.playButton.isEnabled = false
         binding.backButton.setOnClickListener { finish() }
@@ -64,34 +77,85 @@ class PlayerActivity : AppCompatActivity() {
             viewModel.pausePlayer()
         }
 
-        viewModel.getStatePlayerScreenLiveData().observe(this) {
+        binding.favoriteButtonOn.setOnClickListener {
+            viewModel.onFavoriteClicked()
+        }
 
-            when (it) {
+        binding.favoriteButtonOff.setOnClickListener {
+            viewModel.onFavoriteClicked()
+        }
+
+        binding.addToThePlaylistButton.setOnClickListener {
+            viewModel.getPlaylistFromDB()
+            binding.apply {
+                playlistBottomSheet.isVisible = true
+                overlay.isVisible = true
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            }
+        }
+
+        binding.buttonNewPlaylist.setOnClickListener {
+            supportFragmentManager.beginTransaction()
+                .add(R.id.fragment_container_view_player, PlaylistCreatorFragment())
+                .addToBackStack(null)
+                .setReorderingAllowed(true)
+                .commit()
+        }
+
+        bottomSheetBehavior.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+
+                when (newState) {
+
+                    BottomSheetBehavior.STATE_HIDDEN -> {
+                        binding.overlay.isVisible = false
+                    }
+
+                    else -> {
+                        binding.overlay.isVisible = true
+                    }
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                //
+            }
+
+        })
+
+        supportFragmentManager.addOnBackStackChangedListener {
+            viewModel.getPlaylistFromDB()
+        }
+
+        viewModel.getStatePlayerScreenLiveData().observe(this) { playerScreenState ->
+
+            when (playerScreenState) {
                 is PlayerScreenState.Loading -> {
                     changeScreenPlayer(true)
                 }
 
                 is PlayerScreenState.Content -> {
                     changeScreenPlayer(false)
-                    showTrackData(it.track)
-                    showCowerAlbum(it.track)
-                    checkAndShowYear(it.track)
-                    checkAndShowAlbum(it.track)
+                    showTrackData(playerScreenState.track)
+                    showCowerAlbum(playerScreenState.track)
+                    checkAndShowYear(playerScreenState.track)
+                    checkAndShowAlbum(playerScreenState.track)
                 }
 
                 is PlayerScreenState.NoDemo -> {
                     changeScreenPlayer(false)
-                    showTrackData(it.track)
-                    showCowerAlbum(it.track)
-                    checkAndShowAlbum(it.track)
-                    checkAndShowYear(it.track)
+                    showTrackData(playerScreenState.track)
+                    showCowerAlbum(playerScreenState.track)
+                    checkAndShowAlbum(playerScreenState.track)
+                    checkAndShowYear(playerScreenState.track)
                     showScreenPlayerWODemo()
                 }
             }
         }
 
-        viewModel.getPlayStatusLiveData().observe(this) {
-            showPlayerData(it)
+        viewModel.getPlayStatusLiveData().observe(this) { playerStatus ->
+            showPlayerData(playerStatus)
         }
 
         viewModel.getFavoriteState().observe(this) { favoriteState ->
@@ -101,18 +165,49 @@ class PlayerActivity : AppCompatActivity() {
             }
         }
 
-        binding.favoriteButtonOn.setOnClickListener {
-            viewModel.onFavoriteClicked()
+        viewModel.getStatePlaylist().observe(this) { playlistState ->
+            when (playlistState) {
+                is PlaylistState.Content -> {
+                    binding.placeholderNoPlaylists.isVisible = false
+                    binding.playlistsRecycleScrollView.isVisible = true
+                    adapterPlaylist.playlists = playlistState.playlists
+                    adapterPlaylist.notifyDataSetChanged()
+                }
+
+                is PlaylistState.Empty -> {
+                    binding.placeholderNoPlaylists.isVisible = true
+                    binding.playlistsRecycleScrollView.isVisible = false
+                }
+            }
         }
 
-        binding.favoriteButtonOff.setOnClickListener {
-            viewModel.onFavoriteClicked()
+        viewModel.getStateInsertTrack().observe(this) { insertTrackState ->
+            when (insertTrackState) {
+                is InsertTrackState.Fail -> {
+                    Toast.makeText(
+                        this,
+                        getString(R.string.track_already_add_to_the_playlist) + insertTrackState.namePlaylist,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+
+                is InsertTrackState.Success -> {
+                    Toast.makeText(
+                        this,
+                        getString(R.string.add_to_the_playlist) + insertTrackState.namePlaylist,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                }
+            }
         }
+
     }
 
     override fun onPause() {
         super.onPause()
         viewModel.pausePlayer()
+
     }
 
     private fun checkAndShowAlbum(track: Track) {
@@ -135,8 +230,7 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun showCowerAlbum(track: Track) {
-        Glide.with(binding.coverAlbum)
-            .load(track.getCoverArtworkUrl())
+        Glide.with(binding.coverAlbum).load(track.getCoverArtworkUrl())
             .placeholder(R.drawable.placeholder)
             .transform(RoundedCorners(dpToPx(8f, binding.coverAlbum.context)))
             .into(binding.coverAlbum)

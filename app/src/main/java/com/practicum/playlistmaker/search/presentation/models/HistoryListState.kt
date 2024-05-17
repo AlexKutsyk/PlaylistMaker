@@ -7,6 +7,14 @@ sealed class HistoryListState(
     val isVisibleHistoryList: Boolean,
     val isVisibleError: Boolean
 ) {
-    class Content(listHistory: MutableList<Track>) : HistoryListState(listHistory, true, false)
-    class Invisible() : HistoryListState( emptyList<Track>().toMutableList(),false, false)
+    class Content(listHistory: MutableList<Track>) : HistoryListState(
+        listHistory,
+        true,
+        false
+    )
+    class Invisible() : HistoryListState(
+        emptyList<Track>().toMutableList(),
+        false,
+        false
+    )
 }

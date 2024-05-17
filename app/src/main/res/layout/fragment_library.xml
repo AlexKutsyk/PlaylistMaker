@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:paddingHorizontal="@dimen/gap_16dp"
     android:background="?attr/colorSecondary"
     tools:context=".library.ui.LibraryFragment">
 
@@ -19,12 +18,14 @@
             android:fontFamily="@font/ys_display_medium"
             android:textFontWeight="500"
             android:gravity="center_vertical"
+            android:layout_marginStart="@dimen/gap_16dp"
             />
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tab_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/gap_16dp"
         android:background="?attr/colorSecondary"
         app:tabTextColor="?attr/colorOnBackground"
         app:tabIndicatorColor="?attr/colorOnBackground"
