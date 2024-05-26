@@ -27,12 +27,13 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
 import java.io.FileOutputStream
 
-class PlaylistCreatorFragment : Fragment() {
+
+open class PlaylistCreatorFragment : Fragment() {
 
     private var _binding: FragmentPlaylistCreatorBinding? = null
-    private val binding get() = _binding!!
+    open val binding get() = _binding!!
 
-    private val viewModel: PlaylistCreatorViewModel by viewModel()
+    open val viewModel: PlaylistCreatorViewModel by viewModel()
 
     private val placeholder = R.drawable.placeholder
 
@@ -43,7 +44,7 @@ class PlaylistCreatorFragment : Fragment() {
 
     private var uri: Uri? = null
 
-    private var uriImageStorage: Uri? = null
+    var uriImageStorage: Uri? = null
 
     private val currentTime by lazy { System.currentTimeMillis() }
 
@@ -167,13 +168,14 @@ class PlaylistCreatorFragment : Fragment() {
 
     }
 
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 
     private fun showExitDialog() {
-        MaterialAlertDialogBuilder(requireContext()).setTitle(getString(R.string.complete_making_playlist))
+        MaterialAlertDialogBuilder(requireContext(), R.style.PlaylistMakerDialogStyle).setTitle(getString(R.string.complete_making_playlist))
             .setMessage(getString(R.string.data_will_lose))
             .setPositiveButton(getString(R.string.complete)) { _, _ ->
                 requireActivity().supportFragmentManager.popBackStack()
@@ -190,7 +192,7 @@ class PlaylistCreatorFragment : Fragment() {
         }
     }
 
-    private fun saveImageCover() {
+    fun saveImageCover() {
 
         if (uri != null) {
 
@@ -207,9 +209,10 @@ class PlaylistCreatorFragment : Fragment() {
             uriImageStorage = Uri.fromFile(imageCoverFile)
 
             BitmapFactory.decodeStream(inputStream)
-                .compress(Bitmap.CompressFormat.JPEG, 20, outputStream)
+                .compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
 
         }
     }
 
 }
+

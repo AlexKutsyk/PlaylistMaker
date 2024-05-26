@@ -23,6 +23,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import java.text.SimpleDateFormat
 import java.util.Locale
+import kotlin.time.Duration.Companion.milliseconds
 
 class PlayerActivity : AppCompatActivity() {
 
@@ -34,10 +35,11 @@ class PlayerActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityPlayerBinding
 
-    private val formatTimeTrack: SimpleDateFormat by lazy {
-        SimpleDateFormat(
-            getString(R.string.time_track_mm_ss), Locale.getDefault()
-        )
+    private val formatTimeTrack: String by lazy {
+        "${track.trackTimeMillis?.milliseconds?.inWholeMinutes}:" + SimpleDateFormat(
+            getString(R.string.ss_second),
+            Locale.getDefault()
+        ).format(track.trackTimeMillis)
     }
     private val formatYearTrack: SimpleDateFormat by lazy {
         SimpleDateFormat(
@@ -271,7 +273,7 @@ class PlayerActivity : AppCompatActivity() {
             with(track) {
                 nameTrack.text = trackName
                 nameArtist.text = artistName
-                durationValue.text = formatTimeTrack.format(track.trackTimeMillis)
+                durationValue.text = formatTimeTrack
                 genreValue.text = primaryGenreName
                 countryValue.text = country
             }

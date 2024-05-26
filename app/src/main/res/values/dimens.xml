@@ -42,5 +42,11 @@
     <dimen name="_2dp">2dp</dimen>
     <dimen name="_92dp">92dp</dimen>
     <dimen name="_6dp">6dp</dimen>
+    <dimen name="_24sp">24sp</dimen>
+    <dimen name="_18sp">18sp</dimen>
+    <dimen name="_200dp">200dp</dimen>
+    <dimen name="_50dp">50dp</dimen>
+    <dimen name="_268dp">268dp</dimen>
+    <dimen name="_384dp">384dp</dimen>
 
 </resources>

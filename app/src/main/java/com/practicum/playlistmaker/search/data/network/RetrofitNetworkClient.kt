@@ -20,7 +20,7 @@ class RetrofitNetworkClient(
             return Response().apply { resultCode = -1 }
         }
 
-        return when(dto) {
+        return when (dto) {
             is TrackSearchRequest -> {
                 withContext(Dispatchers.IO) {
                     try {

@@ -1,7 +1,7 @@
 package com.practicum.playlistmaker.library.favorites.data.db
 
 import com.practicum.playlistmaker.library.favorites.data.db.convertors.TrackDbConvertor
-import com.practicum.playlistmaker.library.favorites.data.db.entity.TrackEntity
+import com.practicum.playlistmaker.library.favorites.data.db.entity.FavoriteTrackEntity
 import com.practicum.playlistmaker.library.favorites.domain.db.FavoritesRepository
 import com.practicum.playlistmaker.search.domain.models.Track
 import kotlinx.coroutines.flow.Flow
@@ -30,7 +30,7 @@ class FavoritesRepositoryImpl(
         emit(convertListEntityToModel(favoritesTracks))
     }
 
-    private fun convertListEntityToModel(listTrackEntity: List<TrackEntity>): List<Track> {
-        return listTrackEntity.map { trackEntity -> trackDbConvertor.mapEntityToModel(trackEntity) }
+    private fun convertListEntityToModel(listFavoriteTrackEntity: List<FavoriteTrackEntity>): List<Track> {
+        return listFavoriteTrackEntity.map { trackEntity -> trackDbConvertor.mapEntityToModel(trackEntity) }
     }
 }

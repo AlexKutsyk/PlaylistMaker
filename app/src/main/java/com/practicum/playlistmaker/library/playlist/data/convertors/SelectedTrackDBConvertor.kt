@@ -1,27 +1,27 @@
 package com.practicum.playlistmaker.library.playlist.data.convertors
 
 import com.practicum.playlistmaker.library.playlist.data.entity.SelectedTrackEntity
-import com.practicum.playlistmaker.library.playlist.domain.models.SelectedTrack
+import com.practicum.playlistmaker.search.domain.models.Track
 
 class SelectedTrackDBConvertor {
 
-    fun mapModelToEntity(selectedTrack: SelectedTrack): SelectedTrackEntity = SelectedTrackEntity(
-        selectedTrack.id,
-        selectedTrack.playlistId,
-        selectedTrack.trackName,
-        selectedTrack.artistName,
-        selectedTrack.trackTimeMillis,
-        selectedTrack.artworkUrl100,
-        selectedTrack.trackId,
-        selectedTrack.collectionName,
-        selectedTrack.releaseDate,
-        selectedTrack.primaryGenreName,
-        selectedTrack.country,
-        selectedTrack.previewUrl,
-        selectedTrack.isFavorite,
+    fun mapModelToEntity(track: Track): SelectedTrackEntity = SelectedTrackEntity(
+        track.id,
+        track.playlistId,
+        track.trackName,
+        track.artistName,
+        track.trackTimeMillis,
+        track.artworkUrl100,
+        track.trackId,
+        track.collectionName,
+        track.releaseDate,
+        track.primaryGenreName,
+        track.country,
+        track.previewUrl,
+        track.isFavorite,
     )
 
-    fun mapEntityToModel(selectedTrackEntity: SelectedTrackEntity): SelectedTrack = SelectedTrack(
+    fun mapEntityToModel(selectedTrackEntity: SelectedTrackEntity): Track = Track(
         selectedTrackEntity.id,
         selectedTrackEntity.playlistId,
         selectedTrackEntity.trackName,

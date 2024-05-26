@@ -44,4 +44,25 @@
     <string name="track_already_add_to_the_playlist">"Трек уже добавлен в плейлист "</string>
     <string name="add_to_the_playlist">"Добавлено в плейлист "</string>
     <string name="playlist_created">Плейлист %1$s создан</string>
+    <string name="minut">минут</string>
+    <string name="minuta">минута</string>
+    <string name="minuti">минуты</string>
+    <string name="mm_minutes">mm</string>
+    <string name="ss_second">ss</string>
+    <string name="delete_track">Удалить трек</string>
+    <string name="are_you_sure_you_want_to_delete_the_track_from_playlist">Вы уверены, что хотите удалить трек из плейлиста?</string>
+    <string name="no">НЕТ</string>
+    <string name="yes">ДА</string>
+    <string name="delete">Удалить</string>
+    <string name="playlist_does_not_have_tracks">В этом плейлисте нет списка треков, которым можно поделиться</string>
+    <string name="mailto">mailto:</string>
+    <string name="text_plain">text/plain</string>
+    <string name="share">Поделиться</string>
+    <string name="edit_information">Редактировать информацию</string>
+    <string name="delete_playlist">Удалить плейлист</string>
+    <string name="do_you_wont_to_delete_playlist">Хотите удалить плейлист?</string>
+    <string name="edit_title">Редактировать</string>
+    <string name="save">Сохранить</string>
+    <string name="null_title">null</string>
+    <string name="there_are_no_tracks_in_this_playlist">В этом плейлисте нет треков</string>
 </resources>

@@ -36,6 +36,8 @@ class TrackRepositoryImpl(
                     val result = Resource.Success(
                         response.results.map {
                             Track(
+                                0,
+                                0,
                                 it.trackName,
                                 it.artistName,
                                 it.trackTimeMillis?: 0,

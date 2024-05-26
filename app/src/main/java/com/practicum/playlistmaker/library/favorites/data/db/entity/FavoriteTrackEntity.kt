@@ -2,11 +2,13 @@ package com.practicum.playlistmaker.library.favorites.data.db.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.practicum.playlistmaker.library.playlist.domain.models.Playlist
 
-@Entity(tableName = "track_table")
-data class TrackEntity(
+@Entity(tableName = "favorite_table")
+data class FavoriteTrackEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int,
+    val playlistId: Int,
     val trackName: String?,
     val artistName: String?,
     val trackTimeMillis: Int?,

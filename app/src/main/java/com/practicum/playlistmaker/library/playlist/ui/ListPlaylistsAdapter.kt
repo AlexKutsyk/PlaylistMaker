@@ -6,7 +6,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.library.playlist.domain.models.Playlist
 
-class PlaylistAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class ListPlaylistsAdapter(
+    private val onPlaylistClickListener: OnPlaylistClickListener
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     var playlists: MutableList<Playlist> = mutableListOf()
 
@@ -24,8 +26,8 @@ class PlaylistAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         val view =
             LayoutInflater.from(parent.context).inflate(R.layout.playlist_grid_item, parent, false)
         return when (viewType) {
-            1 -> PlaylistWOCoverViewHolder(view, parent.context)
-            else -> PlaylistWCoverViewHolder(view, parent.context)
+            1 -> ListPlaylistsWOCoverViewHolder(view)
+            else -> ListPlaylistsWCoverViewHolder(view)
         }
     }
 
@@ -34,10 +36,19 @@ class PlaylistAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        when (holder) {
-            is PlaylistWOCoverViewHolder -> holder.bind(playlists[position])
-            is PlaylistWCoverViewHolder -> holder.bind(playlists[position])
-        }
 
+        holder.itemView.setOnClickListener { onPlaylistClickListener.onPlaylistClick(playlists[position]) }
+
+        when (holder) {
+            is ListPlaylistsWOCoverViewHolder -> {
+                holder.bind(playlists[position])
+            }
+
+            is ListPlaylistsWCoverViewHolder -> holder.bind(playlists[position])
+        }
+    }
+
+    fun interface OnPlaylistClickListener {
+        fun onPlaylistClick(playlist: Playlist)
     }
 }

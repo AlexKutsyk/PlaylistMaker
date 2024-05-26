@@ -18,10 +18,10 @@ class PlayerWCoverViewHolder(view: View, val context: Context) : RecyclerView.Vi
         imageCoverPlaylist.setImageURI(model.uriImageStorage)
         namePlaylist.text = model.namePlaylist
         amountTracks.text = model.amountTracks.toString()
-        titleTracks.text = chooseEnding(model.amountTracks)
+        titleTracks.text = chooseEndingOfTrack(model.amountTracks)
     }
 
-    private fun chooseEnding(amount: Int): String {
+    private fun chooseEndingOfTrack(amount: Int): String {
         return if (amount % 100 in 11..19) {
             context.getString(R.string.trackov)
         } else {
