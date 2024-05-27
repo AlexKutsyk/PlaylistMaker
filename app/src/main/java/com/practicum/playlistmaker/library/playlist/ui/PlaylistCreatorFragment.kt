@@ -31,7 +31,7 @@ import java.io.FileOutputStream
 open class PlaylistCreatorFragment : Fragment() {
 
     private var _binding: FragmentPlaylistCreatorBinding? = null
-    open val binding get() = _binding!!
+    val binding get() = _binding!!
 
     open val viewModel: PlaylistCreatorViewModel by viewModel()
 
@@ -54,20 +54,13 @@ open class PlaylistCreatorFragment : Fragment() {
         _binding = FragmentPlaylistCreatorBinding.inflate(inflater, container, false)
 
         pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-
             this.uri = uri
 
             if (uri == null) {
                 binding.coverPlaylist.background = null
                 binding.coverPlaylist.setImageResource(placeholder)
             } else {
-                binding.coverPlaylist.apply {
-                    setImageURI(uri)
-                    background =
-                        ContextCompat.getDrawable(context, R.drawable.cover_playlist_background)
-                    clipToOutline = true
-                    outlineProvider = ViewOutlineProvider.BACKGROUND
-                }
+                setCoverPlaylist(uri)
             }
         }
 
@@ -90,25 +83,28 @@ open class PlaylistCreatorFragment : Fragment() {
             })
 
         binding.coverPlaylist.setOnClickListener {
-            pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+            launchPickMedia()
         }
 
         binding.createButton.setOnClickListener {
 
-            saveImageCover()
+            if (binding.createButton.isActivated) {
 
-            Toast.makeText(
-                requireContext(),
-                getString(R.string.playlist_created, binding.nameEditText.text), Toast.LENGTH_SHORT
-            ).show()
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.playlist_created, binding.nameEditText.text),
+                    Toast.LENGTH_SHORT
+                ).show()
 
-            viewModel.createPlaylist(
-                binding.nameEditText.text.toString(),
-                binding.descriptionEditText.text.toString(),
-                uriImageStorage
-            )
+                viewModel.createPlaylist(
+                    binding.nameEditText.text.toString(),
+                    binding.descriptionEditText.text.toString(),
+                    saveImageCover()
+                )
 
-            requireActivity().supportFragmentManager.popBackStack()
+                requireActivity().supportFragmentManager.popBackStack()
+
+            }
         }
 
         titleTextWatcher = object : TextWatcher {
@@ -175,7 +171,9 @@ open class PlaylistCreatorFragment : Fragment() {
     }
 
     private fun showExitDialog() {
-        MaterialAlertDialogBuilder(requireContext(), R.style.PlaylistMakerDialogStyle).setTitle(getString(R.string.complete_making_playlist))
+        MaterialAlertDialogBuilder(requireContext(), R.style.PlaylistMakerDialogStyle).setTitle(
+            getString(R.string.complete_making_playlist)
+        )
             .setMessage(getString(R.string.data_will_lose))
             .setPositiveButton(getString(R.string.complete)) { _, _ ->
                 requireActivity().supportFragmentManager.popBackStack()
@@ -192,8 +190,7 @@ open class PlaylistCreatorFragment : Fragment() {
         }
     }
 
-    fun saveImageCover() {
-
+    fun saveImageCover(): Uri? {
         if (uri != null) {
 
             val imageCoverPath = File(
@@ -210,7 +207,23 @@ open class PlaylistCreatorFragment : Fragment() {
 
             BitmapFactory.decodeStream(inputStream)
                 .compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
+            return uriImageStorage
+        } else {
+            return null
+        }
+    }
 
+    fun launchPickMedia() {
+        pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+    }
+
+    fun setCoverPlaylist(uri: Uri) {
+        binding.coverPlaylist.apply {
+            setImageURI(uri)
+            background =
+                ContextCompat.getDrawable(context, R.drawable.cover_playlist_background)
+            clipToOutline = true
+            outlineProvider = ViewOutlineProvider.BACKGROUND
         }
     }
 

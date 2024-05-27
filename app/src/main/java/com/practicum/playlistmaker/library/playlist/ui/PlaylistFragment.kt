@@ -202,6 +202,7 @@ class PlaylistFragment : Fragment() {
             if (playlist.descriptionPlaylist.isNullOrEmpty()) {
                 descriptionPlaylist.isVisible = false
             } else {
+                descriptionPlaylist.isVisible = true
                 descriptionPlaylist.text = playlist.descriptionPlaylist
             }
             coverPlaylist.setImageURI(playlist.uriImageStorage)

@@ -28,26 +28,40 @@ class PlaylistEditorFragment : PlaylistCreatorFragment() {
             exitFromPlaylistEditFragment()
         }
 
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true){
-            override fun handleOnBackPressed() {
-                exitFromPlaylistEditFragment()
-            }
-        })
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    exitFromPlaylistEditFragment()
+                }
+            })
 
         viewModel.getPlaylistState().observe(viewLifecycleOwner) { playlist ->
+
             setPlaylistData(playlist)
+            var newUriCoverImageStorage = playlist.uriImageStorage
+            var isImageCoverChanged = false
+
+            binding.coverPlaylist.setOnClickListener {
+                isImageCoverChanged = true
+                launchPickMedia()
+            }
 
             binding.createButton.setOnClickListener {
 
-                saveImageCover()
+                if (binding.createButton.isActivated) {
 
-                viewModel.saveUpdatesPlaylist(
-                    playlist,
-                    binding.nameEditText.text.toString(),
-                    binding.descriptionEditText.text.toString(),
-                    uriImageStorage)
+                    if (isImageCoverChanged) newUriCoverImageStorage = saveImageCover()
 
-                exitFromPlaylistEditFragment()
+                    viewModel.saveUpdatesPlaylist(
+                        playlist,
+                        binding.nameEditText.text.toString(),
+                        binding.descriptionEditText.text.toString(),
+                        newUriCoverImageStorage
+                    )
+
+                    exitFromPlaylistEditFragment()
+                }
             }
         }
 
@@ -64,8 +78,7 @@ class PlaylistEditorFragment : PlaylistCreatorFragment() {
         binding.apply {
             nameEditText.setText(playlist.namePlaylist)
             descriptionEditText.setText(playlist.descriptionPlaylist)
-            if (playlist.uriImageStorage.toString() != "null") coverPlaylist.setImageURI(playlist.uriImageStorage)
-
+            if (playlist.uriImageStorage.toString() != "null") setCoverPlaylist(playlist.uriImageStorage!!)
         }
     }
 
