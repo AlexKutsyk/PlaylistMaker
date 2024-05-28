@@ -7,7 +7,7 @@ import com.practicum.playlistmaker.library.playlist.domain.PlaylistInteractor
 import com.practicum.playlistmaker.library.playlist.domain.models.Playlist
 import kotlinx.coroutines.launch
 
-class PlaylistCreatorViewModel(
+open class PlaylistCreatorViewModel(
     private val playlistCreatorInteractor: PlaylistInteractor,
 ) : ViewModel() {
 
@@ -35,4 +35,6 @@ class PlaylistCreatorViewModel(
         descriptionPlaylist = descriptionPlaylist,
         uriImageStorage = uriImageStorage
     )
+
+
 }

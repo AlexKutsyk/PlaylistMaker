@@ -13,7 +13,10 @@ class PlaylistDBConvertor(private val gson: Gson) {
         descriptionPlaylist = playlist.descriptionPlaylist,
         uriImageStorage = playlist.uriImageStorage.toString(),
         listTrackIds = gson.toJson(playlist.listTrackIds),
-        amountTracks = playlist.listTrackIds.size
+        amountTracks = playlist.listTrackIds.size,
+        playlist.totalPlaylistTime,
+        playlist.trackSpelling,
+        playlist.minutesSpelling
     )
 
     fun mapEntityToModel(playlistEntity: PlaylistEntity): Playlist = Playlist(
@@ -22,6 +25,9 @@ class PlaylistDBConvertor(private val gson: Gson) {
         descriptionPlaylist = playlistEntity.descriptionPlaylist,
         uriImageStorage = playlistEntity.uriImageStorage?.toUri(),
         listTrackIds = gson.fromJson(playlistEntity.listTrackIds, Array<Int>::class.java).toMutableList(),
-        amountTracks = playlistEntity.amountTracks
+        amountTracks = playlistEntity.amountTracks,
+        playlistEntity.totalPlaylistTime,
+        playlistEntity.trackSpelling,
+        playlistEntity.minutesSpelling
     )
 }

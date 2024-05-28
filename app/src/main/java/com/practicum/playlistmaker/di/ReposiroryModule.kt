@@ -41,6 +41,7 @@ val reposiroryModule = module {
             appDataBase = get(),
             playlistDBConvertor = get(),
             selectedTrackDBConvertor = get(),
+            androidContext()
         )
     }
 

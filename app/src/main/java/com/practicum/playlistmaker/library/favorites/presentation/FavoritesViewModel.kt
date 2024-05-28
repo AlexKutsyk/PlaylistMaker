@@ -21,8 +21,8 @@ class FavoritesViewModel(
                 if (favoriteListTracks.isEmpty()) {
                     stateFavoritesTracks.postValue(FavoriteState.Empty())
                 } else {
-                    val reverseListFavotitesTracks = favoriteListTracks.reversed()
-                    stateFavoritesTracks.postValue(FavoriteState.Content(reverseListFavotitesTracks))
+                    val reverseListFavoritesTracks = favoriteListTracks.reversed()
+                    stateFavoritesTracks.postValue(FavoriteState.Content(reverseListFavoritesTracks))
                 }
             }
         }

@@ -8,26 +8,28 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
 import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.databinding.FragmentPlaylistsBinding
-import com.practicum.playlistmaker.library.playlist.presentation.PlaylistsViewModel
+import com.practicum.playlistmaker.databinding.FragmentListPlaylistsBinding
+import com.practicum.playlistmaker.library.playlist.presentation.ListPlaylistsViewModel
 import com.practicum.playlistmaker.library.playlist.presentation.models.PlaylistState
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class PlaylistsFragment: Fragment() {
+class ListPlaylistsFragment : Fragment() {
 
-    private var _binding: FragmentPlaylistsBinding? = null
+    private var _binding: FragmentListPlaylistsBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel by viewModel<PlaylistsViewModel>()
+    private val viewModel by viewModel<ListPlaylistsViewModel>()
 
-    private val adapterPlaylist = PlaylistAdapter()
+    private val adapterPlaylist = ListPlaylistsAdapter { playlist ->
+        findNavController().navigate(R.id.action_libraryFragment_to_playlistFragment, PlaylistFragment.createArgs(playlist.id))
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentPlaylistsBinding.inflate(
+        _binding = FragmentListPlaylistsBinding.inflate(
             inflater,
             container,
             false
@@ -44,7 +46,7 @@ class PlaylistsFragment: Fragment() {
             findNavController().navigate(R.id.action_libraryFragment_to_playlistCreatorFragment)
         }
 
-        viewModel.getStatePlaylist().observe(viewLifecycleOwner) { playlistState ->
+        viewModel.getListPlaylistsState().observe(viewLifecycleOwner) { playlistState ->
             when (playlistState) {
                 is PlaylistState.Content -> {
                     binding.placeholderNoPlaylists.isVisible = false
@@ -63,7 +65,7 @@ class PlaylistsFragment: Fragment() {
 
     override fun onStart() {
         super.onStart()
-        viewModel.getPlaylistFromDB()
+        viewModel.getListPlaylistsFromDB()
     }
 
     override fun onDestroyView() {
@@ -72,6 +74,6 @@ class PlaylistsFragment: Fragment() {
     }
 
     companion object {
-        fun newInstance() = PlaylistsFragment()
+        fun newInstance() = ListPlaylistsFragment()
     }
 }

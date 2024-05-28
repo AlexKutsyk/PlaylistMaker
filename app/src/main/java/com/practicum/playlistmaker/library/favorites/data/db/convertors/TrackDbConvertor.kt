@@ -1,12 +1,13 @@
 package com.practicum.playlistmaker.library.favorites.data.db.convertors
 
-import com.practicum.playlistmaker.library.favorites.data.db.entity.TrackEntity
+import com.practicum.playlistmaker.library.favorites.data.db.entity.FavoriteTrackEntity
 import com.practicum.playlistmaker.search.domain.models.Track
 
 class TrackDbConvertor {
 
-    fun mapModelToEntity(track: Track): TrackEntity = TrackEntity(
+    fun mapModelToEntity(track: Track): FavoriteTrackEntity = FavoriteTrackEntity(
             track.id,
+            track.playlistId,
             track.trackName,
             track.artistName,
             track.trackTimeMillis,
@@ -20,7 +21,9 @@ class TrackDbConvertor {
             true
         )
 
-    fun mapEntityToModel(track: TrackEntity): Track = Track(
+    fun mapEntityToModel(track: FavoriteTrackEntity): Track = Track(
+            track.id,
+            track.playlistId,
             track.trackName,
             track.artistName,
             track.trackTimeMillis,
@@ -31,7 +34,6 @@ class TrackDbConvertor {
             track.primaryGenreName,
             track.country,
             track.previewUrl,
-            track.id,
             track.isFavorite,
         )
 }

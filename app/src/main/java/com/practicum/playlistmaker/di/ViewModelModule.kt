@@ -1,8 +1,10 @@
 package com.practicum.playlistmaker.di
 
+import com.practicum.playlistmaker.library.playlist.presentation.PlaylistViewModel
 import com.practicum.playlistmaker.library.favorites.presentation.FavoritesViewModel
 import com.practicum.playlistmaker.library.playlist.presentation.PlaylistCreatorViewModel
-import com.practicum.playlistmaker.library.playlist.presentation.PlaylistsViewModel
+import com.practicum.playlistmaker.library.playlist.presentation.ListPlaylistsViewModel
+import com.practicum.playlistmaker.library.playlist.presentation.PlaylistEditorViewModel
 import com.practicum.playlistmaker.player.presentation.PlayerViewModel
 import com.practicum.playlistmaker.search.domain.models.Track
 import com.practicum.playlistmaker.search.presentation.SearchViewModel
@@ -45,7 +47,22 @@ val viewModelModule = module {
     }
 
     viewModel {
-        PlaylistsViewModel(playlistCreatorInteractor = get())
+        ListPlaylistsViewModel(playlistCreatorInteractor = get())
+    }
+
+    viewModel {
+        PlaylistViewModel(
+            get(),
+            get(),
+            androidContext()
+        )
+    }
+
+    viewModel { (playlistId: Int) ->
+        PlaylistEditorViewModel(
+            playlistId,
+            get()
+        )
     }
 
 }

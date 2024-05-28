@@ -66,7 +66,7 @@ class SearchViewModel(
                             TrackState.Content(trackListSearch, true)
                         )
 
-                        result.second == 1 -> renderSearchState(TrackState.ErrorConnect())
+                        result.second == ERROR_CONNECT -> renderSearchState(TrackState.ErrorConnect())
 
                         else -> {
                             renderSearchState(TrackState.Error())
@@ -88,11 +88,16 @@ class SearchViewModel(
 
     fun cleanListHistory() {
         trackHistoryInteractor.cleanSearchHistory()
-        stateListHistoryLiveData.postValue(HistoryListState.Content(trackHistoryInteractor.readSearchHistory()))
+        showListHistory()
     }
 
     fun showListHistory() {
-        stateListHistoryLiveData.postValue(HistoryListState.Content(trackHistoryInteractor.readSearchHistory()))
+        trackListHistory = trackHistoryInteractor.readSearchHistory()
+        if (trackListHistory.isEmpty()) {
+            hideListHistory()
+        } else {
+            stateListHistoryLiveData.postValue(HistoryListState.Content(trackListHistory))
+        }
     }
 
     fun hideListHistory() {
@@ -102,5 +107,6 @@ class SearchViewModel(
     private companion object {
         const val SEARCH_DEBOUNCE_DELAY_MILLIS = 2000L
         const val MAX_AMOUNT_HISTORY_ITEMS = 10
+        const val ERROR_CONNECT = 1
     }
 }

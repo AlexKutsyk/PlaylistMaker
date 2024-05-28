@@ -10,7 +10,6 @@ import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.library.favorites.domain.db.FavoritesInteractor
 import com.practicum.playlistmaker.library.playlist.domain.PlaylistInteractor
 import com.practicum.playlistmaker.library.playlist.domain.models.Playlist
-import com.practicum.playlistmaker.library.playlist.domain.models.SelectedTrack
 import com.practicum.playlistmaker.library.playlist.presentation.models.PlaylistState
 import com.practicum.playlistmaker.player.presentation.models.FavoriteState
 import com.practicum.playlistmaker.player.presentation.models.InsertTrackState
@@ -143,7 +142,7 @@ class PlayerViewModel(
 
     fun getPlaylistFromDB() {
         viewModelScope.launch {
-            playlistInteractor.getPlaylists().collect { playlists ->
+            playlistInteractor.getListPlaylists().collect { playlists ->
                 if (playlists.isNullOrEmpty()) {
                     statePlaylist.postValue(PlaylistState.Empty())
                 } else {
@@ -155,7 +154,7 @@ class PlayerViewModel(
 
     fun insertTrackToDB(track: Track, playlist: Playlist) {
         viewModelScope.launch {
-            val selectedTrack = SelectedTrack(
+            val track = Track(
                 0,
                 playlist.id,
                 track.trackName,
@@ -170,7 +169,7 @@ class PlayerViewModel(
                 track.previewUrl,
                 track.isFavorite
             )
-            playlistInteractor.insertTrackToPlaylist(selectedTrack).collect { resultInsert ->
+            playlistInteractor.insertTrackToPlaylist(track).collect { resultInsert ->
                 if (resultInsert == 1L) {
                     sateInsertTrack.postValue(InsertTrackState.Success(playlist.namePlaylist))
                 } else {

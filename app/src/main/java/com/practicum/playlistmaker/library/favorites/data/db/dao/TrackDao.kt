@@ -5,22 +5,22 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.practicum.playlistmaker.library.favorites.data.db.entity.TrackEntity
+import com.practicum.playlistmaker.library.favorites.data.db.entity.FavoriteTrackEntity
 
 @Dao
 interface TrackDao {
 
     @Insert(
-        entity = TrackEntity::class,
+        entity = FavoriteTrackEntity::class,
         onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertTrack(track: TrackEntity)
+    suspend fun insertTrack(track: FavoriteTrackEntity)
 
-    @Delete(entity = TrackEntity::class)
-    suspend fun deleteTrack(track: TrackEntity)
+    @Delete(entity = FavoriteTrackEntity::class)
+    suspend fun deleteTrack(track: FavoriteTrackEntity)
 
-    @Query("SELECT * FROM track_table")
-    suspend fun getFavoritesTracks(): List<TrackEntity>
+    @Query("SELECT * FROM favorite_table")
+    suspend fun getFavoritesTracks(): List<FavoriteTrackEntity>
 
-    @Query("SELECT trackId FROM track_table")
+    @Query("SELECT trackId FROM favorite_table")
     suspend fun getIdFavoritesTrack(): List<Int>
 }

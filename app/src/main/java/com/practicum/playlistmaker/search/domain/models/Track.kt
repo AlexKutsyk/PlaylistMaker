@@ -4,6 +4,8 @@ import android.os.Parcel
 import android.os.Parcelable
 
 data class Track(
+    var id: Int,
+    var playlistId: Int,
     val trackName: String?,
     val artistName: String?,
     val trackTimeMillis: Int?,
@@ -14,11 +16,12 @@ data class Track(
     val primaryGenreName: String?,
     val country: String?,
     val previewUrl: String?,
-    var id: Int = 0,
     var isFavorite: Boolean = false,
-) : Parcelable {
+    ) : Parcelable {
 
     constructor(parcel: Parcel) : this(
+        parcel.readInt(),
+        parcel.readInt(),
         parcel.readString(),
         parcel.readString(),
         parcel.readInt(),
@@ -29,11 +32,12 @@ data class Track(
         parcel.readString(),
         parcel.readString(),
         parcel.readString(),
-        parcel.readInt(),
         parcel.readBoolean(),
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeInt(id)
+        parcel.writeInt(playlistId)
         parcel.writeString(trackName)
         parcel.writeString(artistName)
         parcel.writeInt(trackTimeMillis ?: 0)
@@ -44,7 +48,6 @@ data class Track(
         parcel.writeString(primaryGenreName)
         parcel.writeString(country)
         parcel.writeString(previewUrl)
-        parcel.writeInt(id)
         parcel.writeBoolean(isFavorite)
     }
 

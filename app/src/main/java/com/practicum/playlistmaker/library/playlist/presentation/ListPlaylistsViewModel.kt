@@ -8,20 +8,20 @@ import com.practicum.playlistmaker.library.playlist.domain.PlaylistInteractor
 import com.practicum.playlistmaker.library.playlist.presentation.models.PlaylistState
 import kotlinx.coroutines.launch
 
-class PlaylistsViewModel(
+class ListPlaylistsViewModel(
     val playlistCreatorInteractor: PlaylistInteractor,
 ) : ViewModel() {
 
-    private var statePlaylist = MutableLiveData<PlaylistState>()
-    fun getStatePlaylist(): LiveData<PlaylistState> = statePlaylist
+    private var listPlaylistsState = MutableLiveData<PlaylistState>()
+    fun getListPlaylistsState(): LiveData<PlaylistState> = listPlaylistsState
 
-    fun getPlaylistFromDB() {
+    fun getListPlaylistsFromDB() {
         viewModelScope.launch {
-            playlistCreatorInteractor.getPlaylists().collect { playlists ->
+            playlistCreatorInteractor.getListPlaylists().collect { playlists ->
                 if (playlists.isEmpty()) {
-                    statePlaylist.postValue(PlaylistState.Empty())
+                    listPlaylistsState.postValue(PlaylistState.Empty())
                 } else {
-                    statePlaylist.postValue(PlaylistState.Content(playlists))
+                    listPlaylistsState.postValue(PlaylistState.Content(playlists))
                 }
             }
         }

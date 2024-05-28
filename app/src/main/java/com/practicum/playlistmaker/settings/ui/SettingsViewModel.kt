@@ -39,8 +39,8 @@ class SettingsViewModel(
         )
     }
 
-    fun shareApp() {
-        providerSharing.shareApp()
+    fun shareApp(link: String) {
+        providerSharing.shareApp(link)
     }
 
     fun openTerms() {

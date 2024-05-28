@@ -9,8 +9,8 @@ class SharingInteractorImpl(
     private val externalNavigator: ExternalNavigator,
 ) : SharingInteractor {
 
-    override fun shareApp() {
-        externalNavigator.shareApp(getShareAppIdLink())
+    override fun shareApp(link: String) {
+        externalNavigator.shareApp(link)
     }
 
     override fun openTerm() {
@@ -19,10 +19,6 @@ class SharingInteractorImpl(
 
     override fun openSupport() {
         externalNavigator.openSupport(getSupportEmailIdData())
-    }
-
-    private fun getShareAppIdLink(): Int {
-        return R.string.link_share
     }
 
     private fun getSupportEmailIdData(): EmailDataId {

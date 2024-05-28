@@ -1,7 +1,6 @@
 package com.practicum.playlistmaker
 
 import android.app.Application
-import android.webkit.PermissionRequest
 import androidx.appcompat.app.AppCompatDelegate
 import com.markodevcic.peko.PermissionRequester
 import com.practicum.playlistmaker.di.dataModule
@@ -16,7 +15,7 @@ import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
-class MyApp() : Application() {
+class MyApp : Application() {
 
     override fun onCreate() {
         super.onCreate()

@@ -27,12 +27,13 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
 import java.io.FileOutputStream
 
-class PlaylistCreatorFragment : Fragment() {
+
+open class PlaylistCreatorFragment : Fragment() {
 
     private var _binding: FragmentPlaylistCreatorBinding? = null
-    private val binding get() = _binding!!
+    val binding get() = _binding!!
 
-    private val viewModel: PlaylistCreatorViewModel by viewModel()
+    open val viewModel: PlaylistCreatorViewModel by viewModel()
 
     private val placeholder = R.drawable.placeholder
 
@@ -43,7 +44,7 @@ class PlaylistCreatorFragment : Fragment() {
 
     private var uri: Uri? = null
 
-    private var uriImageStorage: Uri? = null
+    var uriImageStorage: Uri? = null
 
     private val currentTime by lazy { System.currentTimeMillis() }
 
@@ -53,20 +54,13 @@ class PlaylistCreatorFragment : Fragment() {
         _binding = FragmentPlaylistCreatorBinding.inflate(inflater, container, false)
 
         pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-
             this.uri = uri
 
             if (uri == null) {
                 binding.coverPlaylist.background = null
                 binding.coverPlaylist.setImageResource(placeholder)
             } else {
-                binding.coverPlaylist.apply {
-                    setImageURI(uri)
-                    background =
-                        ContextCompat.getDrawable(context, R.drawable.cover_playlist_background)
-                    clipToOutline = true
-                    outlineProvider = ViewOutlineProvider.BACKGROUND
-                }
+                setCoverPlaylist(uri)
             }
         }
 
@@ -89,25 +83,28 @@ class PlaylistCreatorFragment : Fragment() {
             })
 
         binding.coverPlaylist.setOnClickListener {
-            pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+            launchPickMedia()
         }
 
         binding.createButton.setOnClickListener {
 
-            saveImageCover()
+            if (binding.createButton.isActivated) {
 
-            Toast.makeText(
-                requireContext(),
-                getString(R.string.playlist_created, binding.nameEditText.text), Toast.LENGTH_SHORT
-            ).show()
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.playlist_created, binding.nameEditText.text),
+                    Toast.LENGTH_SHORT
+                ).show()
 
-            viewModel.createPlaylist(
-                binding.nameEditText.text.toString(),
-                binding.descriptionEditText.text.toString(),
-                uriImageStorage
-            )
+                viewModel.createPlaylist(
+                    binding.nameEditText.text.toString(),
+                    binding.descriptionEditText.text.toString(),
+                    saveImageCover()
+                )
 
-            requireActivity().supportFragmentManager.popBackStack()
+                requireActivity().supportFragmentManager.popBackStack()
+
+            }
         }
 
         titleTextWatcher = object : TextWatcher {
@@ -167,13 +164,16 @@ class PlaylistCreatorFragment : Fragment() {
 
     }
 
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 
     private fun showExitDialog() {
-        MaterialAlertDialogBuilder(requireContext()).setTitle(getString(R.string.complete_making_playlist))
+        MaterialAlertDialogBuilder(requireContext(), R.style.PlaylistMakerDialogStyle).setTitle(
+            getString(R.string.complete_making_playlist)
+        )
             .setMessage(getString(R.string.data_will_lose))
             .setPositiveButton(getString(R.string.complete)) { _, _ ->
                 requireActivity().supportFragmentManager.popBackStack()
@@ -190,8 +190,7 @@ class PlaylistCreatorFragment : Fragment() {
         }
     }
 
-    private fun saveImageCover() {
-
+    fun saveImageCover(): Uri? {
         if (uri != null) {
 
             val imageCoverPath = File(
@@ -207,9 +206,26 @@ class PlaylistCreatorFragment : Fragment() {
             uriImageStorage = Uri.fromFile(imageCoverFile)
 
             BitmapFactory.decodeStream(inputStream)
-                .compress(Bitmap.CompressFormat.JPEG, 20, outputStream)
+                .compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
+            return uriImageStorage
+        } else {
+            return null
+        }
+    }
 
+    fun launchPickMedia() {
+        pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+    }
+
+    fun setCoverPlaylist(uri: Uri) {
+        binding.coverPlaylist.apply {
+            setImageURI(uri)
+            background =
+                ContextCompat.getDrawable(context, R.drawable.cover_playlist_background)
+            clipToOutline = true
+            outlineProvider = ViewOutlineProvider.BACKGROUND
         }
     }
 
 }
+

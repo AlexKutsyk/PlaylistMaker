@@ -37,8 +37,8 @@ class PlayerAdapter(
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        holder.itemView.setOnClickListener { onPlaylistClickListener.onPlaylistClick(playlists[position]) }
 
+        holder.itemView.setOnClickListener { onPlaylistClickListener.onPlaylistClick(playlists[position]) }
 
         when (holder) {
             is PlayerWOCoverViewHolder -> {
